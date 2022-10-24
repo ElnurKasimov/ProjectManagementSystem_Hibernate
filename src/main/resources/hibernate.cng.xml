@@ -13,7 +13,5 @@
         <property name="format_sql">true</property>
         <property name="enable_lazy_load_no_trans">true</property>
 
-        <mapping class="ua.goit.dev6.library.model.dao.BookDao"/>
-        <mapping class="ua.goit.dev6.library.model.dao.AuthorDao"/>
     </session-factory>
 </hibernate-configuration>
