@@ -9,9 +9,7 @@ import model.dao.ProjectDao;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ProjectStorage implements Storage<ProjectDao> {
 
@@ -108,8 +106,8 @@ public class ProjectStorage implements Storage<ProjectDao> {
     }
 
     @Override
-    public List<Optional<ProjectDao>> findAll() {
-        List<Optional<ProjectDao>> projectDaoList = new ArrayList<>();
+    public Set<ProjectDao> findAll() {
+       Set<ProjectDao> projectDaoSet = new HashSet<>();
 //        try (Connection connection = manager.getConnection();
 //            ResultSet rs = connection.prepareStatement(GET_ALL_INFO).executeQuery()) {
 //                while (rs.next()) {
@@ -126,7 +124,7 @@ public class ProjectStorage implements Storage<ProjectDao> {
 //        catch (SQLException exception) {
 //            exception.printStackTrace();
 //        }
-        return projectDaoList;
+        return projectDaoSet;
     }
 
     @Override

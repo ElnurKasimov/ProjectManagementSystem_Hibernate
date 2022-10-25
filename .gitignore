@@ -3,9 +3,6 @@
 .gradle/
 build/
 
-# IDEA module file
-*.iml
-
 # Compiled class file
 *.class
 

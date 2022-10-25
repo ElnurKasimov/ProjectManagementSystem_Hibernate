@@ -11,10 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Properties;
 
 @WebServlet(urlPatterns = "/company/delete")
-public class deleteCompany extends HttpServlet {
+public class DeleteCompanyResult extends HttpServlet {
     private static HibernateProvider connectionProvider;
     private static CompanyStorage companyStorage;
     private static CompanyService companyService;

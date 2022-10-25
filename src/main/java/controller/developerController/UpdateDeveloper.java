@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 
 @WebServlet(urlPatterns = "/developer/update")
@@ -65,7 +64,7 @@ public class UpdateDeveloper extends HttpServlet {
         developerDtoToUpdate.setFirstName(req.getParameter("firstName"));
         developerDtoToUpdate.setAge(Integer.parseInt(req.getParameter("age")));
         developerDtoToUpdate.setSalary(Integer.parseInt(req.getParameter("salary")));
-        developerDtoToUpdate.setCompanyDto(companyService.findByName(companyName).get());
+        developerDtoToUpdate.setCompany(companyService.findByName(companyName).get());
         String[]  projectsNames = req.getParameterValues("projectName");
         if(projectService.checkProjects(projectsNames, companyName)) {
             Set<SkillDto> skillsDto = new HashSet<>();

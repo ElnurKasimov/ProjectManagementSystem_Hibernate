@@ -8,10 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Properties;
 
 @WebServlet(urlPatterns = "/company/update/form")
-public class updateCompanyForm extends HttpServlet {
+public class UpdateCompanyForm extends HttpServlet {
     private static HibernateProvider connectionProvider;
 
     @Override

@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class CustomerDto {
-    private long customer_id;
-    private String customer_name;
+    private long customerId;
+    private String customerName;
     private Reputation reputation;
 
     public enum Reputation {
@@ -14,8 +14,8 @@ public class CustomerDto {
         insolvent
     }
 
-    public CustomerDto (String customer_name, Reputation reputation) {
-        this.customer_name = customer_name;
+    public CustomerDto (String customerName, Reputation reputation) {
+        this.customerName = customerName;
         this.reputation = reputation;
     }
 

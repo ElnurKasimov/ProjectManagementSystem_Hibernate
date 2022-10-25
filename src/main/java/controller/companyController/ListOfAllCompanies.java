@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 @WebServlet(urlPatterns = "/company/list_all_companies")
 public class ListOfAllCompanies extends HttpServlet {
@@ -35,7 +36,7 @@ public class ListOfAllCompanies extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<CompanyDto> companies = companyService.findAllCompanies();
+        Set<CompanyDto> companies = companyService.findAllCompanies();
         req.setAttribute("companies", companies);
         req.getRequestDispatcher("/WEB-INF/view/company/listAllCompanies.jsp").forward(req, resp);
 

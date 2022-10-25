@@ -8,8 +8,8 @@ import java.util.Set;
 @Entity
 @Table (name = "customer")
 public class CustomerDao {
-    private long customer_id;
-    private String customer_name;
+    private long customerId;
+    private String customerName;
     private Reputation reputation;
     private Set<ProjectDao> projects;
 
@@ -19,32 +19,49 @@ public class CustomerDao {
         insolvent
     }
 
-    public CustomerDao (String customer_name, Reputation reputation) {
-        this.customer_name = customer_name;
+    public CustomerDao (String customerName, Reputation reputation) {
+        this.customerName = customerName;
         this.reputation = reputation;
     }
 
     public CustomerDao () {
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long getCustomer_id() {
-        return customer_id;
+    public long getCustomerId() {
+        return customerId;
     }
+
     @Column(name = "customer_name", length = 100)
-    public String getCustomer_name() {
-        return customer_name;
+    public String getCustomerName() {
+        return customerName;
     }
+
     @Column(name = "reputation", length = 100)
     public Reputation getReputation() {
         return reputation;
     }
+
     @OneToMany(mappedBy = "customer")
     public Set<ProjectDao> getProjects() {
         return projects;
     }
 
-    public void setCustomer_id(long customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
+
+    public void setReputation(Reputation reputation) {
+        this.reputation = reputation;
+    }
+
+    public void setProjects(Set<ProjectDao> projects) {
+        this.projects = projects;
+    }
+
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+
 }

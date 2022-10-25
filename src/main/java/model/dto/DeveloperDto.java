@@ -4,19 +4,19 @@ import lombok.Data;
 
 @Data
 public class DeveloperDto {
-    private long developer_id;
+    private long developerId;
     private String lastName;
     private String firstName;
     private int age;
-    private CompanyDto companyDto;
+    private CompanyDto company;
     private  int salary;
 
 
-    public DeveloperDto(String lastName, String firstName, int age, CompanyDto companyDto, int salary) {
+    public DeveloperDto(String lastName, String firstName, int age, CompanyDto company, int salary) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.age = age;
-        this.companyDto = companyDto;
+        this.company = company;
         this.salary = salary;
     }
 

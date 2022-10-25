@@ -12,8 +12,6 @@ import model.storage.ProjectStorage;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,10 +39,9 @@ public class ProjectService {
 
     public List<ProjectDto> findAllProjects() {
          return projectStorage.findAll().stream()
-                .map(Optional::get)
-                .map(ProjectDao::getProject_name)
+                 .map(ProjectDao::getProjectName)
                 .map(name -> projectStorage.findByName(name))
-                .map(project -> project.get())
+                .map(Optional::get)
                 .map(ProjectConverter::from)
                 .collect(Collectors.toList());
     }
@@ -141,17 +138,17 @@ public class ProjectService {
                 companyDto = companyService.findByName(companyName).get();
                 ProjectDto newProjectDto = new ProjectDto(projectName, companyDto, customerDto, cost, startSqlDate);
                 Optional<ProjectDao> projectFromDb =
-                        projectStorage.findByName(newProjectDto.getProject_name());
+                        projectStorage.findByName(newProjectDto.getProjectName());
                 if (projectFromDb.isPresent()) {
                     if (validateByName(newProjectDto, ProjectConverter.from(projectFromDb.get()))) {
                         savedProjectDto = ProjectConverter.from(projectFromDb.get()); // with id
                     } else {
                         result = (String.format("\tProject with name '%s ' already exist with different another data." +
-                                " Please enter correct data", newProjectDto.getProject_name()));
+                                " Please enter correct data", newProjectDto.getProjectName()));
                     }
                 } else {
                     savedProjectDto = ProjectConverter.from(projectStorage.save(ProjectConverter.to(newProjectDto))); // with id
-                    result = "Project " + newProjectDto.getProject_name() + " successfully added to the database";
+                    result = "Project " + newProjectDto.getProjectName() + " successfully added to the database";
                 }
             } else {
                 result = "There is no company with such name. Please enter correct one.";
@@ -167,8 +164,8 @@ public class ProjectService {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateFromProjectDto = dateFormat.format(projectDto.getStart_date());
         String dateFromProjectFromDb = dateFormat.format(projectFromDb.getStart_date());
-        return (projectDto.getCompanyDto().getCompany_name().equals(projectFromDb.getCompanyDto().getCompany_name())) &&
-                (projectDto.getCustomerDto().getCustomer_name().equals(projectFromDb.getCustomerDto().getCustomer_name())) &&
+        return (projectDto.getCompany().getCompanyName().equals(projectFromDb.getCompany().getCompanyName())) &&
+                (projectDto.getCustomer().getCustomerName().equals(projectFromDb.getCustomer().getCustomerName())) &&
                 (projectDto.getCost() == projectFromDb.getCost()) &&
                 (dateFromProjectDto.equals(dateFromProjectFromDb));
     }
@@ -190,9 +187,9 @@ public class ProjectService {
         if (!projectStorage.findAll().isEmpty()) {
             projectStorage.findAll().forEach(projectDao ->
                     result.add(String.format("%s - %s - %d,",
-                            projectDao.get().getStart_date().toString(),
-                            projectDao.get().getProject_name(),
-                            developerStorage.getQuantityOfProjectDevelopers(projectDao.get().getProject_name())
+                            projectDao.getStartDate().toString(),
+                            projectDao.getProjectName(),
+                            developerStorage.getQuantityOfProjectDevelopers(projectDao.getProjectName())
                     )));
         }
      return result;
@@ -206,14 +203,14 @@ public class ProjectService {
             updatedProjectDto = projectFromDb.get();
             Optional<CustomerDto> customerDto = customerService.findByName(customerName);
             if (customerDto.isPresent()) {
-                updatedProjectDto.setCustomerDto(customerDto.get());
+                updatedProjectDto.setCustomer(customerDto.get());
                 Optional<CompanyDto> companyDto = companyService.findByName(companyName);
                 if (companyDto.isPresent()) {
-                    updatedProjectDto.setCompanyDto(companyDto.get());
+                    updatedProjectDto.setCompany(companyDto.get());
                     updatedProjectDto.setCost(cost);
                     updatedProjectDto.setStart_date(startSqlDate);
                     projectStorage.update(ProjectConverter.to(updatedProjectDto));
-                    result = "Project " + updatedProjectDto.getProject_name() + " successfully updated.";
+                    result = "Project " + updatedProjectDto.getProjectName() + " successfully updated.";
                 } else {
                     result = "There is no company with such name. Please enter correct one.";
                 }
@@ -233,7 +230,7 @@ public class ProjectService {
             relationService.deleteAllDevelopersOfProject(projectFromDb.get());
             projectStorage.delete(ProjectConverter.to(projectFromDb.get()));
 
-            result = "Project " + projectFromDb.get().getProject_name() + " successfully deleted from the database";
+            result = "Project " + projectFromDb.get().getProjectName() + " successfully deleted from the database";
         } else {
             result = "There is no project with such name. Please enter correct one.";
         }
@@ -242,7 +239,7 @@ public class ProjectService {
 
     public boolean checkProjects(String[] projectsNames, String  companyName) {
         List<String >  companyProjectsNames = getCompanyProjects(companyName).stream()
-                .map(ProjectDto::getProject_name).collect(Collectors.toList());
+                .map(ProjectDto::getProjectName).collect(Collectors.toList());
         return Stream.of(projectsNames).allMatch(companyProjectsNames::contains);
     }
 

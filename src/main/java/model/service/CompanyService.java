@@ -5,10 +5,10 @@ import model.dto.CompanyDto;
 import model.service.converter.CompanyConverter;
 import model.storage.CompanyStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CompanyService {
@@ -20,12 +20,12 @@ public  CompanyService (CompanyStorage companyStorage) {
 
 public String save (CompanyDto companyDto) {
     String result = "";
-    Optional<CompanyDao> companyFromDb = companyStorage.findByName(companyDto.getCompany_name());
+    Optional<CompanyDao> companyFromDb = companyStorage.findByName(companyDto.getCompanyName());
     if (companyFromDb.isPresent()) {
         result = validateByName(companyDto, CompanyConverter.from(companyFromDb.get()));
     } else {
         companyStorage.save(CompanyConverter.to(companyDto));
-        result = "Company " + companyDto.getCompany_name() + " successfully added to the database";
+        result = "Company " + companyDto.getCompanyName() + " successfully added to the database";
     };
     return result;
 }
@@ -34,15 +34,14 @@ public String save (CompanyDto companyDto) {
         if (!companyDto.getRating().toString().equals(companyFromDb.getRating().toString())) {
             return String.format("Company with name '%s' already exist with different " +
                     "rating '%s'. Please enter correct data.",
-                    companyDto.getCompany_name(), companyFromDb.getRating().toString());
+                    companyDto.getCompanyName(), companyFromDb.getRating().toString());
         } else return "Ok. A company with such parameters is present in the database already.";
     }
 
-    public List<CompanyDto> findAllCompanies() {
-        return companyStorage.findAll()
-                .stream().map(Optional::get)
+    public Set<CompanyDto> findAllCompanies() {
+        return companyStorage.findAll().stream()
                 .map(CompanyConverter::from)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     public Optional<CompanyDto> findById(long id) {
@@ -81,14 +80,14 @@ public String save (CompanyDto companyDto) {
 
     public String updateCompany(CompanyDto companyDto) {
         CompanyDto companyDtoToUpdate = null;
-        Optional<CompanyDto>  companyDtoFromDb = findByName(companyDto.getCompany_name());
+        Optional<CompanyDto>  companyDtoFromDb = findByName(companyDto.getCompanyName());
         if (companyDtoFromDb.isEmpty()) {
             return "Unfortunately, there is no company with such name in the database.  Please enter correct company name.";
         } else {
             companyDtoToUpdate = companyDtoFromDb.get();
             companyDtoToUpdate.setRating(companyDto.getRating());
             CompanyDto updatedCompanyDto = CompanyConverter.from(companyStorage.update(CompanyConverter.to(companyDtoToUpdate)));
-            return String.format("Company %s successfully updated.", updatedCompanyDto.getCompany_name());
+            return String.format("Company %s successfully updated.", updatedCompanyDto.getCompanyName());
         }
     }
 

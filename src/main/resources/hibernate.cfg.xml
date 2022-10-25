@@ -12,5 +12,11 @@
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
         <property name="enable_lazy_load_no_trans">true</property>
+
+        <mapping class="model.dao.CompanyDao"/>
+        <mapping class="model.dao.CustomerDao"/>
+        <mapping class="model.dao.DeveloperDao"/>
+        <mapping class="model.dao.ProjectDao"/>
+        <mapping class="model.dao.SkillDao"/>
     </session-factory>
 </hibernate-configuration>

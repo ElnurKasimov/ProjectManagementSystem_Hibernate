@@ -1,12 +1,14 @@
 package model.storage;
 
+
 import model.config.HibernateProvider;
 import model.dao.CompanyDao;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CompanyStorage implements Storage<CompanyDao> {
     private static HibernateProvider connectionProvider;
@@ -76,22 +78,16 @@ public class CompanyStorage implements Storage<CompanyDao> {
     }
 
     @Override
-    public List<Optional<CompanyDao>> findAll() {
-       List<Optional<CompanyDao>> companyDaoList = new ArrayList<>();
-//        try (Connection connection = manager.getConnection();
-//            ResultSet rs = connection.prepareStatement(GET_ALL_INFO).executeQuery()) {
-//                while (rs.next()) {
-//                    CompanyDao companyDao = new CompanyDao();
-//                    companyDao.setCompany_id(rs.getLong("company_id"));
-//                    companyDao.setCompany_name(rs.getString("company_name"));
-//                    companyDao.setRating(CompanyDao.Rating.valueOf(rs.getString("rating")));
-//                    companyDaoList.add(Optional.ofNullable(companyDao));
-//                }
-//            }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return companyDaoList;
+    public Set<CompanyDao> findAll() {
+        Set<CompanyDao> companyDaoSet = new HashSet<>();
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return new HashSet<>(session.createQuery("select c FROM CompanyDao c", CompanyDao.class)
+                    .getResultStream().collect(Collectors.toSet()));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new HashSet<>();
     }
 
     @Override

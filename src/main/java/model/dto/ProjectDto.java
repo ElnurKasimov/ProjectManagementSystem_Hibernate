@@ -6,25 +6,25 @@ import java.sql.Date;
 
 @Data
 public class ProjectDto {
-    private long project_id;
-    private String project_name;
-    private CompanyDto companyDto;
-    private CustomerDto customerDto;
+    private long projectId;
+    private String projectName;
+    private CompanyDto company;
+    private CustomerDto customer;
     private  int cost;
     private Date start_date;
 
-    public ProjectDto (String project_name, CompanyDto companyDto, CustomerDto customerDto, int cost,
+    public ProjectDto (String projectName, CompanyDto company, CustomerDto customer, int cost,
                        Date start_date) {
-        this.project_name = project_name;
-        this.companyDto = companyDto;
-        this.customerDto =  customerDto;
+        this.projectName = projectName;
+        this.company = company;
+        this.customer = customer;
         this.cost = cost;
         this.start_date = start_date;
     }
 
-    public ProjectDto (long project_id, String project_name) {
-        this.project_id = project_id;
-        this.project_name = project_name;
+    public ProjectDto (long projectId, String projectName) {
+        this.projectId = projectId;
+        this.projectName = projectName;
     }
     public ProjectDto () {
     }

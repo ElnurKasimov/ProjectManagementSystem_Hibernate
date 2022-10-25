@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @WebServlet(urlPatterns = "/developer/developer_info")
 public class DeveloperInfo extends HttpServlet {
@@ -65,8 +64,8 @@ public class DeveloperInfo extends HttpServlet {
         DeveloperDto developerDto = developerService.getByName(lastName, firstName);
         if (developerDto != null) {
             isPresent = true;
-            projects = projectService.getProjectsNameByDeveloperId(developerDto.getDeveloper_id());
-            skills =  skillService.getSkillSetByDeveloperId(developerDto.getDeveloper_id());
+            projects = projectService.getProjectsNameByDeveloperId(developerDto.getDeveloperId());
+            skills =  skillService.getSkillSetByDeveloperId(developerDto.getDeveloperId());
         }
         req.setAttribute("isPresent", isPresent);
         req.setAttribute("developer", developerDto);

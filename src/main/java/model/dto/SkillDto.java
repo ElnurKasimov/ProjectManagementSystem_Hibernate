@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SkillDto {
-    private long skill_id;
+    private long skillId;
     private String language;
     private String level;
 

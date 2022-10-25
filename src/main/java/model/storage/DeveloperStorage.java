@@ -4,9 +4,7 @@ import model.config.HibernateProvider;
 import model.dao.DeveloperDao;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 public class DeveloperStorage implements Storage<DeveloperDao>{
@@ -111,8 +109,8 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
         return 0;
     }
     @Override
-    public List<Optional<DeveloperDao>> findAll() {
-        List<Optional<DeveloperDao>> developerDaoList = new ArrayList<>();
+    public Set<DeveloperDao> findAll() {
+        Set<DeveloperDao> developerDaoSet = new HashSet<>();
 //        try (Connection connection = manager.getConnection();
 //            ResultSet rs = connection.prepareStatement(GET_ALL_INFO).executeQuery()) {
 //                while (rs.next()) {
@@ -131,7 +129,7 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
 //        catch (SQLException exception) {
 //            exception.printStackTrace();
 //        }
-    return developerDaoList;
+    return developerDaoSet;
     }
 
     @Override

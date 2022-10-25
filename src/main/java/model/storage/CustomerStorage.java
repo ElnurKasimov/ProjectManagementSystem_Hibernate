@@ -4,9 +4,7 @@ import model.config.HibernateProvider;
 import model.dao.CustomerDao;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class CustomerStorage implements Storage<CustomerDao> {
     private static HibernateProvider connectionProvider;
@@ -76,8 +74,8 @@ public class CustomerStorage implements Storage<CustomerDao> {
     }
 
     @Override
-    public List<Optional<CustomerDao>> findAll() {
-        List<Optional<CustomerDao>> customerDaoList = new ArrayList<>();
+    public Set<CustomerDao> findAll() {
+        Set<CustomerDao> customerDaoSet =  new HashSet<>();
 //        try (Connection connection = manager.getConnection();
 //            ResultSet rs = connection.prepareStatement(GET_ALL_INFO).executeQuery()) {
 //                while (rs.next()) {
@@ -85,13 +83,13 @@ public class CustomerStorage implements Storage<CustomerDao> {
 //                    customerDao.setCustomer_id(rs.getLong("customer_id"));
 //                    customerDao.setCustomer_name(rs.getString("customer_name"));
 //                    customerDao.setReputation(CustomerDao.Reputation.valueOf(rs.getString("reputation")));
-//                    customerDaoList.add(Optional.ofNullable(customerDao));
+//                    customerDaoSet.add(Optional.ofNullable(customerDao));
 //                }
 //            }
 //        catch (SQLException exception) {
 //            exception.printStackTrace();
 //        }
-        return customerDaoList;
+        return customerDaoSet;
     }
 
     @Override

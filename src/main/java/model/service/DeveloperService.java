@@ -4,7 +4,6 @@ import model.dao.DeveloperDao;
 import model.dto.*;
 import model.service.converter.CompanyConverter;
 import model.service.converter.DeveloperConverter;
-import model.service.converter.ProjectConverter;
 import model.storage.CompanyStorage;
 import model.storage.DeveloperStorage;
 import model.storage.ProjectStorage;
@@ -44,7 +43,7 @@ public class DeveloperService {
         developerDtoToSave.setAge(age);
         developerDtoToSave.setSalary(salary);
         if (companyStorage.findByName(companyName).isPresent()) {
-            developerDtoToSave.setCompanyDto(CompanyConverter.from(companyStorage.findByName(companyName).get()));
+            developerDtoToSave.setCompany(CompanyConverter.from(companyStorage.findByName(companyName).get()));
             Optional<DeveloperDao> developerFromDb = developerStorage.findByName(lastName, firstName);
             if (developerFromDb.isPresent()) {
                 result = validateByName(developerDtoToSave, DeveloperConverter.from(developerFromDb.get()));
@@ -58,9 +57,9 @@ public class DeveloperService {
     }
 
     public String saveDeveloperRelations(DeveloperDto developerDto, Set<ProjectDto> developerProjects, String language, String level) {
-        List<Long> projectIdsByDeveloperIdFromDb = projectService.getProjectIdsByDeveloperId(developerDto.getDeveloper_id());
+        List<Long> projectIdsByDeveloperIdFromDb = projectService.getProjectIdsByDeveloperId(developerDto.getDeveloperId());
         Set<ProjectDto> newDeveloperProjects = developerProjects.stream()
-                .filter(project -> !projectIdsByDeveloperIdFromDb.contains(project.getProject_id()))
+                .filter(project -> !projectIdsByDeveloperIdFromDb.contains(project.getProjectId()))
                 .collect(Collectors.toSet());
         if (!newDeveloperProjects.isEmpty()) {
             relationService.saveProjectDeveloper(developerProjects, developerDto);
@@ -69,9 +68,9 @@ public class DeveloperService {
         Set<SkillDto> developerSkills = new HashSet<>();
         developerSkills.add(skillService.findByLanguageAndLevel(language, level));
 
-        List<Long> developerSkillIdsFromDb = skillService.getSkillIdsByDeveloperId(developerDto.getDeveloper_id());
+        List<Long> developerSkillIdsFromDb = skillService.getSkillIdsByDeveloperId(developerDto.getDeveloperId());
         Set<SkillDto> newDeveloperSkills = developerSkills.stream()
-                .filter(skill -> !developerSkillIdsFromDb.contains(skill.getSkill_id()))
+                .filter(skill -> !developerSkillIdsFromDb.contains(skill.getSkillId()))
                 .collect(Collectors.toSet());
         if (!newDeveloperSkills.isEmpty()) {
             relationService.saveDeveloperSkill(developerDto, newDeveloperSkills);
@@ -82,7 +81,7 @@ public class DeveloperService {
 
     public String validateByName(DeveloperDto developerDto, DeveloperDto developerFromDb) {
         if ((developerDto.getAge() == developerFromDb.getAge()) &&
-                (developerDto.getCompanyDto().getCompany_name().equals(developerFromDb.getCompanyDto().getCompany_name()))
+                (developerDto.getCompany().getCompanyName().equals(developerFromDb.getCompany().getCompanyName()))
                 && (developerDto.getSalary() == developerFromDb.getSalary())) {
             return "";
         } else return String.format("\tDeveloper  %s %s  already exists with different another data." +
@@ -90,8 +89,7 @@ public class DeveloperService {
     }
 
     public List<DeveloperDto> findAllDevelopers() {
-        return developerStorage.findAll()
-                .stream().map(Optional::get)
+        return developerStorage.findAll().stream()
                 .map(DeveloperConverter::from)
                 .collect(Collectors.toList());
     }
@@ -110,10 +108,10 @@ public class DeveloperService {
         result.add(String.format("\t\tDeveloper  %s %s  :", developerDto.getLastName(), developerDto.getFirstName()));
         result.add("\t\t\tAge : " + developerDto.getAge() + ",");
         result.add(String.format("\t\t\tWorks in company %s, with salary %d",
-                developerDto.getCompanyDto().getCompany_name(), developerDto.getSalary()));
+                developerDto.getCompany().getCompanyName(), developerDto.getSalary()));
         StringBuilder projectsName = new StringBuilder();
         projectsName.append("\t\t\tParticipates in such projects :");
-        List<String> projectsList = projectStorage.getProjectsNameByDeveloperId(developerDto.getDeveloper_id());
+        List<String> projectsList = projectStorage.getProjectsNameByDeveloperId(developerDto.getDeveloperId());
         for (String project : projectsList) {
             projectsName.append(" " + project + ",");
         }
@@ -121,7 +119,7 @@ public class DeveloperService {
         result.add(projectsName.toString());
         StringBuilder skillsName = new StringBuilder();
         skillsName.append("\t\t\tHas skill set :");
-        List<String> skillsList = skillStorage.getSkillSetByDeveloperId(developerDto.getDeveloper_id());
+        List<String> skillsList = skillStorage.getSkillSetByDeveloperId(developerDto.getDeveloperId());
         for (String skill : skillsList) {
             skillsName.append(" " + skill + ",");
         }

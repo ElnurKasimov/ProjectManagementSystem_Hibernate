@@ -2,8 +2,8 @@ package controller.companyController;
 
 import model.config.HibernateProvider;
 import model.dto.CompanyDto;
-import model.service.CompanyService;
-import model.storage.CompanyStorage;
+import model.service.*;
+import model.storage.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,17 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Properties;
 
-@WebServlet(urlPatterns = "/company/update")
-public class updateCompany extends HttpServlet {
+@WebServlet(urlPatterns = "/company/add")
+public class AddCompanyResult extends HttpServlet {
     private static HibernateProvider connectionProvider;
     private static CompanyStorage companyStorage;
     private static CompanyService companyService;
 
     @Override
     public void init() throws ServletException {
-        connectionProvider = new HibernateProvider();
+
         try {
             companyStorage = new CompanyStorage(connectionProvider);
             companyService = new CompanyService(companyStorage);
@@ -36,9 +35,9 @@ public class updateCompany extends HttpServlet {
         String companyName = req.getParameter("companyName");
         String rating = req.getParameter("rating");
         CompanyDto newCompanyDto = new CompanyDto(companyName, CompanyDto.Rating.valueOf(rating));
-        String result = companyService.updateCompany(newCompanyDto);
+        String result = companyService.save(newCompanyDto);
         req.setAttribute("result", result);
-        req.getRequestDispatcher("/WEB-INF/view/company/updateCompany.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/view/company/addCompany.jsp").forward(req, resp);
 
     }
 
