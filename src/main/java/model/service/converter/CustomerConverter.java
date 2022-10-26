@@ -7,7 +7,7 @@ public class CustomerConverter {
 
     public static CustomerDto from(CustomerDao entity) {
         CustomerDto customerDto = new CustomerDto();
-        customerDto.setCustomerId(entity.getCustomerId());
+        customerDto.setCustomer_id(entity.getCustomer_id());
         customerDto.setCustomerName(entity.getCustomerName());
         customerDto.setReputation(CustomerDto.Reputation.valueOf(entity.getReputation().toString()));
         return customerDto;
@@ -15,7 +15,7 @@ public class CustomerConverter {
 
     public static CustomerDao to(CustomerDto entity) {
         CustomerDao customerDao = new CustomerDao();
-        customerDao.setCustomerId(entity.getCustomerId());
+        customerDao.setCustomer_id(entity.getCustomer_id());
         customerDao.setCustomerName(entity.getCustomerName());
         customerDao.setReputation(CustomerDao.Reputation.valueOf(entity.getReputation().toString()));
         return customerDao;

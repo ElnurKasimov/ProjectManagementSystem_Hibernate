@@ -57,9 +57,9 @@ public class DeveloperService {
     }
 
     public String saveDeveloperRelations(DeveloperDto developerDto, Set<ProjectDto> developerProjects, String language, String level) {
-        List<Long> projectIdsByDeveloperIdFromDb = projectService.getProjectIdsByDeveloperId(developerDto.getDeveloperId());
+        List<Long> projectIdsByDeveloperIdFromDb = projectService.getProjectIdsByDeveloperId(developerDto.getDeveloper_id());
         Set<ProjectDto> newDeveloperProjects = developerProjects.stream()
-                .filter(project -> !projectIdsByDeveloperIdFromDb.contains(project.getProjectId()))
+                .filter(project -> !projectIdsByDeveloperIdFromDb.contains(project.getProject_id()))
                 .collect(Collectors.toSet());
         if (!newDeveloperProjects.isEmpty()) {
             relationService.saveProjectDeveloper(developerProjects, developerDto);
@@ -68,7 +68,7 @@ public class DeveloperService {
         Set<SkillDto> developerSkills = new HashSet<>();
         developerSkills.add(skillService.findByLanguageAndLevel(language, level));
 
-        List<Long> developerSkillIdsFromDb = skillService.getSkillIdsByDeveloperId(developerDto.getDeveloperId());
+        List<Long> developerSkillIdsFromDb = skillService.getSkillIdsByDeveloperId(developerDto.getDeveloper_id());
         Set<SkillDto> newDeveloperSkills = developerSkills.stream()
                 .filter(skill -> !developerSkillIdsFromDb.contains(skill.getSkillId()))
                 .collect(Collectors.toSet());
@@ -111,7 +111,7 @@ public class DeveloperService {
                 developerDto.getCompany().getCompanyName(), developerDto.getSalary()));
         StringBuilder projectsName = new StringBuilder();
         projectsName.append("\t\t\tParticipates in such projects :");
-        List<String> projectsList = projectStorage.getProjectsNameByDeveloperId(developerDto.getDeveloperId());
+        List<String> projectsList = projectStorage.getProjectsNameByDeveloperId(developerDto.getDeveloper_id());
         for (String project : projectsList) {
             projectsName.append(" " + project + ",");
         }
@@ -119,7 +119,7 @@ public class DeveloperService {
         result.add(projectsName.toString());
         StringBuilder skillsName = new StringBuilder();
         skillsName.append("\t\t\tHas skill set :");
-        List<String> skillsList = skillStorage.getSkillSetByDeveloperId(developerDto.getDeveloperId());
+        List<String> skillsList = skillStorage.getSkillSetByDeveloperId(developerDto.getDeveloper_id());
         for (String skill : skillsList) {
             skillsName.append(" " + skill + ",");
         }

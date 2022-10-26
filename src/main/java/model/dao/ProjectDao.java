@@ -7,7 +7,7 @@ import java.util.Set;
 @Entity
 @Table(name = "project")
 public class ProjectDao {
-    private long projectId;
+    private long project_id;
     private String projectName;
     private int cost;
     private Date startDate;
@@ -30,8 +30,8 @@ public class ProjectDao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long getProjectId() {
-        return projectId;
+    public long getProject_id() {
+        return project_id;
     }
     @Column (name = "project_name", length = 100)
     public String getProjectName() {
@@ -60,8 +60,8 @@ public class ProjectDao {
         return developers;
     }
 
-    public void setProjectId(long projectId) {
-        this.projectId = projectId;
+    public void setProject_id(long project_id) {
+        this.project_id = project_id;
     }
 
     public void setProjectName(String projectName) {

@@ -162,8 +162,8 @@ public class ProjectService {
 
     public boolean validateByName(ProjectDto projectDto, ProjectDto projectFromDb) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dateFromProjectDto = dateFormat.format(projectDto.getStart_date());
-        String dateFromProjectFromDb = dateFormat.format(projectFromDb.getStart_date());
+        String dateFromProjectDto = dateFormat.format(projectDto.getStartDate());
+        String dateFromProjectFromDb = dateFormat.format(projectFromDb.getStartDate());
         return (projectDto.getCompany().getCompanyName().equals(projectFromDb.getCompany().getCompanyName())) &&
                 (projectDto.getCustomer().getCustomerName().equals(projectFromDb.getCustomer().getCustomerName())) &&
                 (projectDto.getCost() == projectFromDb.getCost()) &&
@@ -208,7 +208,7 @@ public class ProjectService {
                 if (companyDto.isPresent()) {
                     updatedProjectDto.setCompany(companyDto.get());
                     updatedProjectDto.setCost(cost);
-                    updatedProjectDto.setStart_date(startSqlDate);
+                    updatedProjectDto.setStartDate(startSqlDate);
                     projectStorage.update(ProjectConverter.to(updatedProjectDto));
                     result = "Project " + updatedProjectDto.getProjectName() + " successfully updated.";
                 } else {
