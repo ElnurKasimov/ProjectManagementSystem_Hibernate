@@ -7,7 +7,7 @@ import java.util.Set;
 @Entity
 @Table(name = "skill")
 public class SkillDao {
-    private long skillId;
+    private long skill_id;
     private String language;
     private String level;
     private Set<DeveloperDao> developers;
@@ -22,8 +22,8 @@ public class SkillDao {
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long getSkillId() {
-        return skillId;
+    public long getSkill_id() {
+        return skill_id;
     }
     @Column(name = "language")
     public String getLanguage() {
@@ -38,8 +38,8 @@ public class SkillDao {
         return developers;
     }
 
-    public void setSkillId(long skillId) {
-        this.skillId = skillId;
+    public void setSkill_id(long skill_id) {
+        this.skill_id = skill_id;
     }
 
 

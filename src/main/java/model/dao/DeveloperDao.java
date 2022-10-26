@@ -6,7 +6,7 @@ import java.util.Set;
 @Entity
 @Table(name = "developer")
 public class DeveloperDao {
-    private long developerId;
+    private long developer_id;
     private String lastName;
     private String firstName;
     private int age;
@@ -29,8 +29,8 @@ public class DeveloperDao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long getDeveloperId() {
-        return developerId;
+    public long getDeveloper_id() {
+        return developer_id;
     }
 
     @Column(name = "lastname", length = 200)
@@ -77,8 +77,8 @@ public class DeveloperDao {
         return skills;
     }
 
-    public void setDeveloperId(long developerId) {
-        this.developerId = developerId;
+    public void setDeveloper_id(long developer_id) {
+        this.developer_id = developer_id;
     }
 
     public void setLastName(String lastName) {

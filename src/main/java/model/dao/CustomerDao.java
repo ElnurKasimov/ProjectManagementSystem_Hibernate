@@ -8,7 +8,7 @@ import java.util.Set;
 @Entity
 @Table (name = "customer")
 public class CustomerDao {
-    private long customerId;
+    private long customer_id;
     private String customerName;
     private Reputation reputation;
     private Set<ProjectDao> projects;
@@ -29,8 +29,8 @@ public class CustomerDao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long getCustomerId() {
-        return customerId;
+    public long getCustomer_id() {
+        return customer_id;
     }
 
     @Column(name = "customer_name", length = 100)
@@ -60,8 +60,8 @@ public class CustomerDao {
         this.projects = projects;
     }
 
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
+    public void setCustomer_id(long customer_id) {
+        this.customer_id = customer_id;
     }
 
 }

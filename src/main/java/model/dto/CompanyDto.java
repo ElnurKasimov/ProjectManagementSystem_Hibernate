@@ -5,7 +5,7 @@ import java.util.Set;
 
 
 public class CompanyDto {
-    private long companyId;
+    private long company_id;
     private String companyName;
     private Rating rating;
     private Set<DeveloperDto> developers;
@@ -30,8 +30,8 @@ public class CompanyDto {
     public CompanyDto() {
     }
 
-    public long getCompanyId() {
-        return companyId;
+    public long getCompany_id() {
+        return company_id;
     }
 
     public String getCompanyName() {
@@ -50,8 +50,8 @@ public class CompanyDto {
         return projects;
     }
 
-    public void setCompanyId(long companyId) {
-        this.companyId = companyId;
+    public void setCompany_id(long company_id) {
+        this.company_id = company_id;
     }
 
     public void setCompanyName(String companyName) {

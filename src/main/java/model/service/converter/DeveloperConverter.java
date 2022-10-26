@@ -7,7 +7,7 @@ public class DeveloperConverter {
 
     public static DeveloperDto from(DeveloperDao entity) {
         DeveloperDto developerDto = new DeveloperDto();
-        developerDto.setDeveloperId(entity.getDeveloperId());
+        developerDto.setDeveloper_id(entity.getDeveloper_id());
         developerDto.setLastName(entity.getLastName());
         developerDto.setFirstName(entity.getFirstName());
         developerDto.setAge(entity.getAge());
@@ -18,7 +18,7 @@ public class DeveloperConverter {
 
     public static DeveloperDao to(DeveloperDto entity) {
         DeveloperDao developerDao = new DeveloperDao();
-        developerDao.setDeveloperId(entity.getDeveloperId());
+        developerDao.setDeveloper_id(entity.getDeveloper_id());
         developerDao.setLastName(entity.getLastName());
         developerDao.setFirstName(entity.getFirstName());
         developerDao.setAge(entity.getAge());

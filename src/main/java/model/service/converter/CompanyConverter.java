@@ -9,7 +9,7 @@ public class CompanyConverter{
 
     public static CompanyDto from(CompanyDao entity) {
         CompanyDto companyDto = new CompanyDto();
-        companyDto.setCompanyId(entity.getCompany_id());
+        companyDto.setCompany_id(entity.getCompany_id());
         companyDto.setCompanyName(entity.getCompanyName());
         companyDto.setRating(CompanyDto.Rating.valueOf(entity.getRating().toString()));
         companyDto.setDevelopers(entity.getDevelopers().stream().map(DeveloperConverter::from).collect(Collectors.toSet()));
@@ -19,7 +19,7 @@ public class CompanyConverter{
 
     public static CompanyDao to(CompanyDto entity) {
         CompanyDao companyDao = new CompanyDao();
-        companyDao.setCompany_id(entity.getCompanyId());
+        companyDao.setCompany_id(entity.getCompany_id());
         companyDao.setCompanyName(entity.getCompanyName());
         companyDao.setRating(CompanyDao.Rating.valueOf(entity.getRating().toString()));
         companyDao.setDevelopers(entity.getDevelopers().stream().map(DeveloperConverter::to).collect(Collectors.toSet()));
