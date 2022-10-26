@@ -21,7 +21,7 @@ public class AddCompanyResult extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-
+        connectionProvider = new HibernateProvider();
         try {
             companyStorage = new CompanyStorage(connectionProvider);
             companyService = new CompanyService(companyStorage);

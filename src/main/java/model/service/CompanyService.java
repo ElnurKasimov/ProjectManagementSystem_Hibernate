@@ -21,6 +21,7 @@ public  CompanyService (CompanyStorage companyStorage) {
 public String save (CompanyDto companyDto) {
     String result = "";
     Optional<CompanyDao> companyFromDb = companyStorage.findByName(companyDto.getCompanyName());
+    System.out.println(companyFromDb);
     if (companyFromDb.isPresent()) {
         result = validateByName(companyDto, CompanyConverter.from(companyFromDb.get()));
     } else {

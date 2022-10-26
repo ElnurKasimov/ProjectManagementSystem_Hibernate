@@ -64,16 +64,14 @@ public class CompanyStorage implements Storage<CompanyDao> {
 
     @Override
     public Optional<CompanyDao> findByName(String name) {
-//        try(Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)) {
-//            statement.setString(1, name);
-//            ResultSet resultSet = statement.executeQuery();
-//            CompanyDao companyDao = mapCompanyDao(resultSet);
-//            return Optional.ofNullable(companyDao);
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery("FROM CompanyDao as c WHERE c.companyName like :name"
+                            , CompanyDao.class)
+                    .setParameter("name", "%" + name + "%").uniqueResultOptional();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         return Optional.empty();
     }
 
