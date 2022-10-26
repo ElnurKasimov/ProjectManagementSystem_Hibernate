@@ -80,8 +80,8 @@ public class CompanyStorage implements Storage<CompanyDao> {
         Set<CompanyDao> companyDaoSet = new HashSet<>();
         try (Session session = connectionProvider.openSession()) {
             Transaction transaction = session.beginTransaction();
-            return new HashSet<>(session.createQuery("select c FROM CompanyDao c", CompanyDao.class)
-                    .getResultStream().collect(Collectors.toSet()));
+            return session.createQuery("select c FROM CompanyDao c", CompanyDao.class)
+                    .getResultStream().collect(Collectors.toSet());
         } catch (Exception exception) {
             exception.printStackTrace();
         }

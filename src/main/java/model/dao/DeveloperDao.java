@@ -59,7 +59,7 @@ public class DeveloperDao {
         return salary;
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (
             name = "project_developer",
             joinColumns = { @JoinColumn(name = "developer_id") },
@@ -68,7 +68,7 @@ public class DeveloperDao {
         return projects;
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (
             name = "developer_skill",
             joinColumns = { @JoinColumn(name = "developer_id") },

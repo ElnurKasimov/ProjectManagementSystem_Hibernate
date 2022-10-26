@@ -55,7 +55,7 @@ public class ProjectDao {
     public CustomerDao getCustomer() {
         return customer;
     }
-    @ManyToMany(mappedBy = "projects")
+    @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
     public Set<DeveloperDao> getDevelopers() {
         return developers;
     }

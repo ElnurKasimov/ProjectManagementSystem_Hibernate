@@ -2,6 +2,8 @@ package model.dao;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.Set;
 
@@ -44,6 +46,7 @@ public class CustomerDao {
     }
 
     @OneToMany(mappedBy = "customer")
+    @Fetch(FetchMode.SELECT)
     public Set<ProjectDao> getProjects() {
         return projects;
     }
