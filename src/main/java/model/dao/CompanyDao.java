@@ -37,7 +37,7 @@ public class CompanyDao {
         return companyName;
     }
 
-    @Column (name = "rating", length = 50)
+    @Enumerated(EnumType.STRING)
     public Rating getRating() {
         return rating;
     }

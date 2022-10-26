@@ -38,7 +38,7 @@ public class CustomerDao {
         return customerName;
     }
 
-    @Column(name = "reputation", length = 100)
+    @Enumerated(EnumType.STRING)
     public Reputation getReputation() {
         return reputation;
     }
