@@ -66,8 +66,9 @@ public class CompanyStorage implements Storage<CompanyDao> {
     public Optional<CompanyDao> findByName(String name) {
         try (Session session = connectionProvider.openSession()) {
             Transaction transaction = session.beginTransaction();
-            return session.createQuery("FROM CompanyDao as c WHERE c.companyName like :name", CompanyDao.class)
-                    .setParameter("name", name).stream().findFirst();
+            return session.createQuery("FROM CompanyDao as c WHERE c.companyName like :name"
+                            , CompanyDao.class)
+                    .setParameter("name", "%" + name + "%").uniqueResultOptional();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
