@@ -33,7 +33,7 @@ public class SkillDao {
     public String getLevel() {
         return level;
     }
-    @ManyToMany(mappedBy = "skills", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "skills")
     public Set<DeveloperDao> getDevelopers() {
         return developers;
     }

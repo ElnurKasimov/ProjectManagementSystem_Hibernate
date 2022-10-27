@@ -45,8 +45,7 @@ public class CustomerDao {
         return reputation;
     }
 
-    @OneToMany(mappedBy = "customer")
-    @Fetch(FetchMode.SELECT)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     public Set<ProjectDao> getProjects() {
         return projects;
     }

@@ -45,17 +45,20 @@ public class ProjectDao {
     public Date getStartDate() {
         return startDate;
     }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     public CompanyDao getCompany() {
         return company;
     }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     public CustomerDao getCustomer() {
         return customer;
     }
-    @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
+
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "projects")
     public Set<DeveloperDao> getDevelopers() {
         return developers;
     }

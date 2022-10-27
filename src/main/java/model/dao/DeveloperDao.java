@@ -48,18 +48,18 @@ public class DeveloperDao {
         return age;
     }
 
+    @Column(name = "salary")
+    public int getSalary() {
+        return salary;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     public CompanyDao getCompany() {
         return company;
     }
 
-    @Column(name = "salary")
-    public int getSalary() {
-        return salary;
-    }
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable (
             name = "project_developer",
             joinColumns = { @JoinColumn(name = "developer_id") },
@@ -68,7 +68,7 @@ public class DeveloperDao {
         return projects;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable (
             name = "developer_skill",
             joinColumns = { @JoinColumn(name = "developer_id") },
@@ -76,6 +76,7 @@ public class DeveloperDao {
     public Set<SkillDao> getSkills() {
         return skills;
     }
+
 
     public void setDeveloper_id(long developer_id) {
         this.developer_id = developer_id;
