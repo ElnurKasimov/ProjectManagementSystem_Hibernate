@@ -45,7 +45,7 @@
                              <c:out value="${customer.customer_id}"/>
                          </td>
                          <td>
-                             <c:out value="${customer.customer_name}"/>
+                             <c:out value="${customer.customerName}"/>
                          </td>
                          <td>
                              <c:out value="${customer.reputation}"/>

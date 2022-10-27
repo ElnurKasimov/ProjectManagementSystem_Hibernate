@@ -39,11 +39,8 @@ public class ProjectService {
 
     public List<ProjectDto> findAllProjects() {
          return projectStorage.findAll().stream()
-                 .map(ProjectDao::getProjectName)
-                .map(name -> projectStorage.findByName(name))
-                .map(Optional::get)
-                .map(ProjectConverter::from)
-                .collect(Collectors.toList());
+                 .map(ProjectConverter::from)
+                 .collect(Collectors.toList());
     }
 
     public Optional<ProjectDto> findByName(String name) {

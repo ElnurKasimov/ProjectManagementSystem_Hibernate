@@ -8,8 +8,7 @@ public class SkillDto {
     private long skillId;
     private String language;
     private String level;
-    private Set<DeveloperDto> developers;
-    
+
     public SkillDto(String language, String level) {
         this.language = language;
         this.level = level;
@@ -22,21 +21,6 @@ public class SkillDto {
         this.skillId = skillId;
         this.language = language;
         this.level = level;
-    }
-
-    public SkillDto(long skillId, String language, String level, Set<DeveloperDto> developers) {
-        this.skillId = skillId;
-        this.language = language;
-        this.level = level;
-        this.developers = developers;
-    }
-
-    public Set<DeveloperDto> getDevelopers() {
-        return developers;
-    }
-
-    public void setDevelopers(Set<DeveloperDto> developers) {
-        this.developers = developers;
     }
 
     public long getSkillId() {

@@ -8,7 +8,6 @@ public class CustomerDto {
     private long customer_id;
     private String customerName;
     private Reputation reputation;
-    private Set<ProjectDto> projects;
 
     public enum Reputation {
         respectable,
@@ -29,21 +28,21 @@ public class CustomerDto {
         this.customerName = customerName;
         this.reputation = reputation;
     }
-
-    public CustomerDto(long customer_id, String customerName, Reputation reputation, Set<ProjectDto> projects) {
-        this.customer_id = customer_id;
-        this.customerName = customerName;
-        this.reputation = reputation;
-        this.projects = projects;
-    }
-
-    public Set<ProjectDto> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(Set<ProjectDto> projects) {
-        this.projects = projects;
-    }
+//
+//    public CustomerDto(long customer_id, String customerName, Reputation reputation, Set<ProjectDto> projects) {
+//        this.customer_id = customer_id;
+//        this.customerName = customerName;
+//        this.reputation = reputation;
+//        this.projects = projects;
+//    }
+//
+//    public Set<ProjectDto> getProjects() {
+//        return projects;
+//    }
+//
+//    public void setProjects(Set<ProjectDto> projects) {
+//        this.projects = projects;
+//    }
 
 
     public long getCustomer_id() {

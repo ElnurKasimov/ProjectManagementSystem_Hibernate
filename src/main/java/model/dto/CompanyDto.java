@@ -8,8 +8,8 @@ public class CompanyDto {
     private long company_id;
     private String companyName;
     private Rating rating;
-    private Set<DeveloperDto> developers;
-    private Set<ProjectDto> projects;
+//    private Set<DeveloperDto> developers;
+//    private Set<ProjectDto> projects;
 
 
     public enum Rating {
@@ -42,13 +42,13 @@ public class CompanyDto {
         return rating;
     }
 
-    public Set<DeveloperDto> getDevelopers() {
-        return developers;
-    }
-
-    public Set<ProjectDto> getProjects() {
-        return projects;
-    }
+//    public Set<DeveloperDto> getDevelopers() {
+//        return developers;
+//    }
+//
+//    public Set<ProjectDto> getProjects() {
+//        return projects;
+//    }
 
     public void setCompany_id(long company_id) {
         this.company_id = company_id;
@@ -62,13 +62,13 @@ public class CompanyDto {
         this.rating = rating;
     }
 
-    public void setDevelopers(Set<DeveloperDto> developers) {
-        this.developers = developers;
-    }
-
-    public void setProjects(Set<ProjectDto> projects) {
-        this.projects = projects;
-    }
+//    public void setDevelopers(Set<DeveloperDto> developers) {
+//        this.developers = developers;
+//    }
+//
+//    public void setProjects(Set<ProjectDto> projects) {
+//        this.projects = projects;
+//    }
 
 }
 

@@ -13,8 +13,6 @@ public class ProjectDao {
     private Date startDate;
     private CompanyDao company;
     private CustomerDao customer;
-    private Set<DeveloperDao> developers;
-
 
     public ProjectDao(String projectName, CompanyDao company, CustomerDao customer, int cost,
                       Date startDate) {
@@ -58,11 +56,6 @@ public class ProjectDao {
         return customer;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "projects")
-    public Set<DeveloperDao> getDevelopers() {
-        return developers;
-    }
-
     public void setProject_id(long project_id) {
         this.project_id = project_id;
     }
@@ -85,10 +78,6 @@ public class ProjectDao {
 
     public void setCustomer(CustomerDao customer) {
         this.customer = customer;
-    }
-
-    public void setDevelopers(Set<DeveloperDao> developers) {
-        this.developers = developers;
     }
 
 }

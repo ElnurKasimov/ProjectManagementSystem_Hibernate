@@ -10,8 +10,6 @@ public class SkillDao {
     private long skill_id;
     private String language;
     private String level;
-    private Set<DeveloperDao> developers;
-
 
     public SkillDao(String language, String level) {
         this.language = language;
@@ -33,10 +31,6 @@ public class SkillDao {
     public String getLevel() {
         return level;
     }
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "skills")
-    public Set<DeveloperDao> getDevelopers() {
-        return developers;
-    }
 
     public void setSkill_id(long skill_id) {
         this.skill_id = skill_id;
@@ -51,9 +45,6 @@ public class SkillDao {
         this.level = level;
     }
 
-    public void setDevelopers(Set<DeveloperDao> developers) {
-        this.developers = developers;
-    }
 }
 
 

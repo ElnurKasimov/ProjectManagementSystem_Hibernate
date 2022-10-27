@@ -1,10 +1,14 @@
 package model.storage;
 
 import model.config.HibernateProvider;
+import model.dao.CompanyDao;
 import model.dao.DeveloperDao;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class DeveloperStorage implements Storage<DeveloperDao>{
@@ -110,26 +114,14 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
     }
     @Override
     public Set<DeveloperDao> findAll() {
-        Set<DeveloperDao> developerDaoSet = new HashSet<>();
-//        try (Connection connection = manager.getConnection();
-//            ResultSet rs = connection.prepareStatement(GET_ALL_INFO).executeQuery()) {
-//                while (rs.next()) {
-//                    DeveloperDao developerDao = new DeveloperDao();
-//                    developerDao.setDeveloper_id(rs.getLong("developer_id"));
-//                    developerDao.setLastName(rs.getString("lastName"));
-//                    if (rs.getString("firstName") != null) {
-//                        developerDao.setFirstName(rs.getString("firstName"));
-//                    }
-//                    developerDao.setAge(rs.getInt("age"));
-//                    developerDao.setCompanyDao(companyStorage.findById(rs.getInt("company_id")).get());
-//                    developerDao.setSalary(rs.getInt("salary"));
-//                    developerDaoList.add(Optional.ofNullable(developerDao));
-//                }
-//            }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-    return developerDaoSet;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery("select d FROM DeveloperDao d", DeveloperDao.class)
+                    .getResultStream().collect(Collectors.toSet());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new HashSet<>();
     }
 
     @Override

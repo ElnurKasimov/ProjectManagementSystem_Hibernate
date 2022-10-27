@@ -1,10 +1,14 @@
 package model.storage;
 
 import model.config.HibernateProvider;
+import model.dao.CompanyDao;
 import model.dao.CustomerDao;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CustomerStorage implements Storage<CustomerDao> {
     private static HibernateProvider connectionProvider;
@@ -75,21 +79,14 @@ public class CustomerStorage implements Storage<CustomerDao> {
 
     @Override
     public Set<CustomerDao> findAll() {
-        Set<CustomerDao> customerDaoSet =  new HashSet<>();
-//        try (Connection connection = manager.getConnection();
-//            ResultSet rs = connection.prepareStatement(GET_ALL_INFO).executeQuery()) {
-//                while (rs.next()) {
-//                    CustomerDao customerDao = new CustomerDao();
-//                    customerDao.setCustomer_id(rs.getLong("customer_id"));
-//                    customerDao.setCustomer_name(rs.getString("customer_name"));
-//                    customerDao.setReputation(CustomerDao.Reputation.valueOf(rs.getString("reputation")));
-//                    customerDaoSet.add(Optional.ofNullable(customerDao));
-//                }
-//            }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return customerDaoSet;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery("select c FROM CustomerDao c", CustomerDao.class)
+                    .getResultStream().collect(Collectors.toSet());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new HashSet<>();
     }
 
     @Override

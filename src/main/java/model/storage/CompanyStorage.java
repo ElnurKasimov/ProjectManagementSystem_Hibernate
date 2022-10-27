@@ -77,7 +77,6 @@ public class CompanyStorage implements Storage<CompanyDao> {
 
     @Override
     public Set<CompanyDao> findAll() {
-        Set<CompanyDao> companyDaoSet = new HashSet<>();
         try (Session session = connectionProvider.openSession()) {
             Transaction transaction = session.beginTransaction();
             return session.createQuery("select c FROM CompanyDao c", CompanyDao.class)

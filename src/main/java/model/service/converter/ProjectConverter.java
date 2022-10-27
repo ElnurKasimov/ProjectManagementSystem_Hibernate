@@ -15,7 +15,6 @@ public class ProjectConverter{
         projectDto.setStartDate(entity.getStartDate());
         projectDto.setCompany(CompanyConverter.from(entity.getCompany()));
         projectDto.setCustomer(CustomerConverter.from(entity.getCustomer()));
-        projectDto.setDevelopers(entity.getDevelopers().stream().map(DeveloperConverter::from).collect(Collectors.toSet()));
         return projectDto;
     }
 
@@ -27,7 +26,6 @@ public class ProjectConverter{
         projectDao.setStartDate(entity.getStartDate());
         projectDao.setCompany(CompanyConverter.to(entity.getCompany()));
         projectDao.setCustomer(CustomerConverter.to(entity.getCustomer()));
-        projectDao.setDevelopers(entity.getDevelopers().stream().map(DeveloperConverter::to).collect(Collectors.toSet()));
         return projectDao;
     }
 }

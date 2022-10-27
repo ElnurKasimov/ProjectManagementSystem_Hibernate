@@ -52,7 +52,7 @@
                             <c:out value="${developer.firstName}"/>
                         </td>
                               <td>
-                            <c:out value="${developer.companyDto.company_name}"/>
+                            <c:out value="${developer.company.companyName}"/>
                         </td>
                     </tr>
                 </c:forEach>

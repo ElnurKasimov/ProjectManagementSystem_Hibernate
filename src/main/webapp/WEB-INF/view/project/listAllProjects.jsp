@@ -47,19 +47,19 @@
                             <c:out value="${project.project_id}"/>
                         </td>
                         <td>
-                            <c:out value="${project.project_name}"/>
+                            <c:out value="${project.projectName}"/>
                         </td>
                         <td>
-                            <c:out value="${project.companyDto.company_name}"/>
+                            <c:out value="${project.company.companyName}"/>
                         </td>
                         <td>
-                            <c:out value="${project.customerDto.customer_name}"/>
+                            <c:out value="${project.customer.customerName}"/>
                         </td>
                          <td>
                              <c:out value="${project.cost}"/>
                          </td>
                            <td>
-                               <c:out value="${project.start_date}"/>
+                               <c:out value="${project.startDate}"/>
                            </td>
                     </tr>
                 </c:forEach>

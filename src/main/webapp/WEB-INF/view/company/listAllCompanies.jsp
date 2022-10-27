@@ -45,7 +45,7 @@
                              <c:out value="${company.company_id}"/>
                          </td>
                          <td>
-                             <c:out value="${company.company_name}"/>
+                             <c:out value="${company.companyName}"/>
                          </td>
                          <td>
                              <c:out value="${company.rating}"/>

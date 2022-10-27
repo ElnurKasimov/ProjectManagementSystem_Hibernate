@@ -5,11 +5,14 @@ import model.dao.CompanyDao;
 import model.dao.CustomerDao;
 import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProjectStorage implements Storage<ProjectDao> {
 
@@ -107,24 +110,14 @@ public class ProjectStorage implements Storage<ProjectDao> {
 
     @Override
     public Set<ProjectDao> findAll() {
-       Set<ProjectDao> projectDaoSet = new HashSet<>();
-//        try (Connection connection = manager.getConnection();
-//            ResultSet rs = connection.prepareStatement(GET_ALL_INFO).executeQuery()) {
-//                while (rs.next()) {
-//                    ProjectDao projectDao = new ProjectDao();
-//                    projectDao.setProject_id(rs.getLong("project_id"));
-//                    projectDao.setProject_name(rs.getString("project_name"));
-//
-//                    projectDao.setCost(rs.getInt("cost"));
-//                    projectDao.setStart_date(Date.valueOf(LocalDate.parse(rs.getString("start_date"),
-//                            DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-//                    projectDaoList.add(Optional.ofNullable(projectDao));
-//                }
-//            }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return projectDaoSet;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery("select p FROM ProjectDao p", ProjectDao.class)
+                    .getResultStream().collect(Collectors.toSet());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new HashSet<>();
     }
 
     @Override
