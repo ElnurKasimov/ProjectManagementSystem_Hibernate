@@ -68,7 +68,7 @@ public class CompanyStorage implements Storage<CompanyDao> {
             Transaction transaction = session.beginTransaction();
             return session.createQuery("FROM CompanyDao as c WHERE c.companyName like :name"
                             , CompanyDao.class)
-                    .setParameter("name", "%" + name + "%").uniqueResultOptional();
+                    .setParameter("name", name).uniqueResultOptional();
         } catch (Exception exception) {
             exception.printStackTrace();
         }

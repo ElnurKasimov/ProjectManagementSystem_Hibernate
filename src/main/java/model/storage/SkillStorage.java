@@ -1,13 +1,14 @@
 package model.storage;
 
 import model.config.HibernateProvider;
+import model.dao.ProjectDao;
 import model.dao.SkillDao;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SkillStorage implements Storage<SkillDao> {
 
@@ -152,22 +153,19 @@ public class SkillStorage implements Storage<SkillDao> {
     public void delete(SkillDao entity) {
     }
 
-    public List<String> getSkillSetByDeveloperId(long id) {
-        List<String> skills = new ArrayList<>();
-//        try (Connection connection = manager.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(GET_SKILLS_BY_DEVELOPER_ID)) {
-//            statement.setLong(1, id);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                skills.add("( " +rs.getString("language") + " - " + rs.getString("level") + " )");
-//            }
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return skills;
+    public Set<SkillDao> getSkillSetByDeveloperId(long id) {
+        Set<SkillDao> skillDaoSet = new HashSet<>();
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery(
+                    "SELECT s FROM SkillDao s JOIN s.developers d WHERE d.developer_id = :developer_id",
+                    SkillDao.class).setParameter("developer_id", id).getResultStream().collect(Collectors.toSet());
+        }
+        catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return skillDaoSet;
     }
-
     private SkillDao mapSkillDao(ResultSet resultSet) throws SQLException {
        SkillDao skillDao = null;
 //        while (resultSet.next()) {

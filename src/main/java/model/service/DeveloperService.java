@@ -4,6 +4,7 @@ import model.dao.DeveloperDao;
 import model.dto.*;
 import model.service.converter.CompanyConverter;
 import model.service.converter.DeveloperConverter;
+import model.service.converter.SkillConverter;
 import model.storage.CompanyStorage;
 import model.storage.DeveloperStorage;
 import model.storage.ProjectStorage;
@@ -103,29 +104,29 @@ public class DeveloperService {
     }
 
     public void getInfoByName(String lastName, String firstName) {
-        List<String> result = new ArrayList<>();
-        DeveloperDto developerDto = DeveloperConverter.from(developerStorage.findByName(lastName, firstName).get());
-        result.add(String.format("\t\tDeveloper  %s %s  :", developerDto.getLastName(), developerDto.getFirstName()));
-        result.add("\t\t\tAge : " + developerDto.getAge() + ",");
-        result.add(String.format("\t\t\tWorks in company %s, with salary %d",
-                developerDto.getCompany().getCompanyName(), developerDto.getSalary()));
-        StringBuilder projectsName = new StringBuilder();
-        projectsName.append("\t\t\tParticipates in such projects :");
-        List<String> projectsList = projectStorage.getProjectsNameByDeveloperId(developerDto.getDeveloper_id());
-        for (String project : projectsList) {
-            projectsName.append(" " + project + ",");
-        }
-        projectsName.deleteCharAt(projectsName.length() - 1);
-        result.add(projectsName.toString());
-        StringBuilder skillsName = new StringBuilder();
-        skillsName.append("\t\t\tHas skill set :");
-        List<String> skillsList = skillStorage.getSkillSetByDeveloperId(developerDto.getDeveloper_id());
-        for (String skill : skillsList) {
-            skillsName.append(" " + skill + ",");
-        }
-        skillsName.deleteCharAt(skillsName.length() - 1);
-        result.add(skillsName.toString());
-
+//        List<String> result = new ArrayList<>();
+//        DeveloperDto developerDto = DeveloperConverter.from(developerStorage.findByName(lastName, firstName).get());
+//        result.add(String.format("\t\tDeveloper  %s %s  :", developerDto.getLastName(), developerDto.getFirstName()));
+//        result.add("\t\t\tAge : " + developerDto.getAge() + ",");
+//        result.add(String.format("\t\t\tWorks in company %s, with salary %d",
+//                developerDto.getCompany().getCompanyName(), developerDto.getSalary()));
+//        StringBuilder projectsName = new StringBuilder();
+//        projectsName.append("\t\t\tParticipates in such projects :");
+//        List<String> projectsList = projectStorage.getProjectsNameByDeveloperId(developerDto.getDeveloper_id());
+//        for (String project : projectsList) {
+//            projectsName.append(" " + project + ",");
+//        }
+//        projectsName.deleteCharAt(projectsName.length() - 1);
+//        result.add(projectsName.toString());
+//        StringBuilder skillsName = new StringBuilder();
+//        skillsName.append("\t\t\tHas skill set :");
+//        Set<SkillDto> skillsList = skillStorage.getSkillSetByDeveloperId(developerDto.getDeveloper_id())
+//                .stream().map(SkillConverter::from).collect(Collectors.toSet());
+//        for (SkillDto skill : skillsList) {
+//            skillsName.append(skill.getLanguage() + "  - " + skill.getLevel() + ",");
+//        }
+//        skillsName.deleteCharAt(skillsName.length() - 1);
+//        result.add(skillsName.toString());
     }
 
     ;

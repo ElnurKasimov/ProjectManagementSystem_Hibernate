@@ -85,17 +85,14 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
    }
 
     public Optional<DeveloperDao> findByName(String lastName, String firstName) {
-//        try(Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)) {
-//            statement.setString(1, lastName);
-//            statement.setString(2, firstName);
-//            ResultSet resultSet = statement.executeQuery();
-//            DeveloperDao developerDao = mapDeveloperDao(resultSet);
-//            return Optional.ofNullable(developerDao);
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery("FROM DeveloperDao as d WHERE d.lastName LIKE :lastName AND d.firstName LIKE :firstName"
+                            , DeveloperDao.class)
+                    .setParameter("lastName", lastName).setParameter("firstName", firstName).uniqueResultOptional();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         return Optional.empty();
     }
 

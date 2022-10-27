@@ -1,5 +1,6 @@
 package model.storage;
 
+import jakarta.persistence.Query;
 import model.config.HibernateProvider;
 import model.dao.CompanyDao;
 import model.dao.CustomerDao;
@@ -222,20 +223,17 @@ public class ProjectStorage implements Storage<ProjectDao> {
         return id;
     }
 
-    public List<String> getProjectsNameByDeveloperId (long id) {
-        List<String> projectNames = new ArrayList<>();
-//        try (Connection connection = manager.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(GET_PROJECTS_NAME_BY_DEVELOPER_ID)) {
-//            statement.setLong(1, id);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                projectNames.add(rs.getString("project_name"));
-//            }
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return projectNames;
+    public Set<ProjectDao> getProjectsNameByDeveloperId (long id) {
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery(
+                   "SELECT p FROM ProjectDao p JOIN p.developers d WHERE d.developer_id = :developer_id",
+                   ProjectDao.class).setParameter("developer_id", id).getResultStream().collect(Collectors.toSet());
+        }
+        catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new HashSet<>();
     }
 
     public List<Long> getProjectIdsByDeveloperId (long id) {

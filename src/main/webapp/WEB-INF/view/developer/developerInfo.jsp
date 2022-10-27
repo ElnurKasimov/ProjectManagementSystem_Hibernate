@@ -21,14 +21,14 @@
           <c:when test="${isPresent}">
               <c:out value="Information about developer "/> <b><c:out value="${developer.lastName} ${developer.firstName} : "/></b><br>
              <c:out value="${developer.age} years old,"/><br>
-             <c:out value="works in company ${developer.companyDto.company_name}, with salary ${developer.salary},"/><br>
+             <c:out value="works in company ${developer.company.companyName}, with salary ${developer.salary},"/><br>
              <c:out value="participates in such projects : "/>
              <c:forEach var = "project" items="${projects}">
-                     <c:out value = "${project},"/>
+                     <c:out value = "${project}"/>
                  </c:forEach><br>
              <c:out value="has such skill set :"/>
                  <c:forEach var = "skill" items="${skills}">
-                     <c:out value = "${skill},"/>
+                     <c:out value = "${skill}"/>
                  </c:forEach>
           </c:when>
           <c:otherwise>

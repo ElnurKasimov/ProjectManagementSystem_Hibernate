@@ -58,7 +58,12 @@ public class ProjectService {
     }
 
     public List<String> getProjectsNameByDeveloperId(long id) {
-        return projectStorage.getProjectsNameByDeveloperId(id);
+        Set<ProjectDao> projectsFromDb = projectStorage.getProjectsNameByDeveloperId(id);
+        if (projectsFromDb.isEmpty()) {
+            return new ArrayList<>();
+        } else {
+            return projectsFromDb.stream().map(ProjectDao::getProjectName).collect(Collectors.toList());
+        }
     }
 
     public List<Long> getProjectIdsByDeveloperId(long id) {

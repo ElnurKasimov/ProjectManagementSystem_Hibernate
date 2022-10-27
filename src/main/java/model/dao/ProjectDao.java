@@ -13,6 +13,7 @@ public class ProjectDao {
     private Date startDate;
     private CompanyDao company;
     private CustomerDao customer;
+    private Set<DeveloperDao> developers;
 
     public ProjectDao(String projectName, CompanyDao company, CustomerDao customer, int cost,
                       Date startDate) {
@@ -24,6 +25,16 @@ public class ProjectDao {
     }
 
     public ProjectDao() {
+    }
+
+    public ProjectDao(long project_id, String projectName, int cost, Date startDate, CompanyDao company, CustomerDao customer, Set<DeveloperDao> developers) {
+        this.project_id = project_id;
+        this.projectName = projectName;
+        this.cost = cost;
+        this.startDate = startDate;
+        this.company = company;
+        this.customer = customer;
+        this.developers = developers;
     }
 
     @Id
@@ -56,6 +67,11 @@ public class ProjectDao {
         return customer;
     }
 
+    @ManyToMany (mappedBy = "projects")
+    public Set<DeveloperDao> getDevelopers() {
+        return developers;
+    }
+
     public void setProject_id(long project_id) {
         this.project_id = project_id;
     }
@@ -80,5 +96,8 @@ public class ProjectDao {
         this.customer = customer;
     }
 
+    public void setDevelopers(Set<DeveloperDao> developers) {
+        this.developers = developers;
+    }
 }
 
