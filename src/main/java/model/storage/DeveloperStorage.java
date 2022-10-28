@@ -1,7 +1,6 @@
 package model.storage;
 
 import model.config.HibernateProvider;
-import model.dao.CompanyDao;
 import model.dao.DeveloperDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -167,26 +166,29 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
 //        }
     }
 
-    public List<String> getNamesListOfCertainLanguageDevelopers(String language) {
-        List<String> developersNames = new ArrayList<>();
-//        try (Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(GET_LIST_LANGUAGE_DEVELOPERS)) {
-//            statement.setString(1, language);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                String lastName = rs.getString("lastname");
-//                String firstName = rs.getString("firstname");
-//                String level = rs.getString("level");
-//                developersNames.add(String.format("%s %s - %s",
-//                        lastName, firstName, level));
-//            }
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return developersNames;
+    public Set<DeveloperDao> getDevelopersWithCertainLanguage(String language) {
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery(
+                    "SELECT d FROM DeveloperDao d JOIN d.skills s WHERE s.language = :language", DeveloperDao.class)
+                    .setParameter("language", language).getResultStream().collect(Collectors.toSet());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new HashSet<>();
     }
 
+    public Set<DeveloperDao> getDevelopersWithCertainLevel(String level) {
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery(
+                            "SELECT d FROM DeveloperDao d JOIN d.skills s WHERE s.level = :level", DeveloperDao.class)
+                    .setParameter("level", level).getResultStream().collect(Collectors.toSet());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new HashSet<>();
+    }
     public List<String> getNamesListOfCertainLevelDevelopers(String level) {
         List<String> developersNames = new ArrayList<>();
 //        try (Connection connection = manager.getConnection();

@@ -4,7 +4,6 @@ import model.dao.DeveloperDao;
 import model.dto.*;
 import model.service.converter.CompanyConverter;
 import model.service.converter.DeveloperConverter;
-import model.service.converter.SkillConverter;
 import model.storage.CompanyStorage;
 import model.storage.DeveloperStorage;
 import model.storage.ProjectStorage;
@@ -136,13 +135,19 @@ public class DeveloperService {
     }
 
     public List<String> getListNamesDevelopersWithCertainLanguage(String language) {
-        return developerStorage.getNamesListOfCertainLanguageDevelopers(language);
+        List<String> result = new ArrayList<>();
+        Set<DeveloperDao> developersFromDb = developerStorage.getDevelopersWithCertainLanguage(language);
+        developersFromDb.forEach(dev -> result.add(dev.getLastName() + " " + dev.getFirstName()));
+        return  result;
     }
 
     ;
 
     public List<String> getListNamesDevelopersWithCertainLevel(String level) {
-        return developerStorage.getNamesListOfCertainLevelDevelopers(level);
+        List<String> result = new ArrayList<>();
+        Set<DeveloperDao> developersFromDb = developerStorage.getDevelopersWithCertainLevel(level);
+        developersFromDb.forEach(dev -> result.add(dev.getLastName() + " " + dev.getFirstName()));
+        return  result;
     }
 
     ;

@@ -65,9 +65,7 @@ public class DeveloperInfo extends HttpServlet {
         if (developerDto != null) {
             isPresent = true;
             projects = projectService.getProjectsNameByDeveloperId(developerDto.getDeveloper_id());
-            System.out.println(projects);
             skills =  skillService.getSkillSetByDeveloperId(developerDto.getDeveloper_id());
-            System.out.println(skills);
         }
         req.setAttribute("isPresent", isPresent);
         req.setAttribute("developer", developerDto);
