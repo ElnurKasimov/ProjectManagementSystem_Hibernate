@@ -176,10 +176,6 @@ public class ProjectService {
         return ProjectConverter.from(projectStorage.findByName(name).get());
     }
 
-    public List<String> getDevelopersNamesByProjectName(String name) {
-        return developerStorage.getDevelopersNamesByProjectName(name);
-    }
-
     public long getProjectExpences(String projectName) {
         return  projectStorage.getProjectExpences(projectName);
     }

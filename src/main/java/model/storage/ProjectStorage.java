@@ -96,16 +96,14 @@ public class ProjectStorage implements Storage<ProjectDao> {
 
     @Override
     public Optional<ProjectDao> findByName(String name) {
-//        try(Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)) {
-//            statement.setString(1, name);
-//            ResultSet resultSet = statement.executeQuery();
-//            ProjectDao projectDao = mapProjectDao(resultSet);
-//            return Optional.ofNullable(projectDao);
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery("FROM ProjectDao as p WHERE p.projectName like :name"
+                            , ProjectDao.class)
+                    .setParameter("name", name).uniqueResultOptional();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         return Optional.empty();
     }
 
@@ -253,19 +251,16 @@ public class ProjectStorage implements Storage<ProjectDao> {
     }
 
     public long getProjectExpences(String name) {
-        long expences = 0;
-//        try(Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(GET_PROJECT_EXPENCES)) {
-//            statement.setString(1, name);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                expences = rs.getLong("sum");
-//            }
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return expences;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery(
+                    "SELECT SUM(d.salary) FROM DeveloperDao d JOIN d.projects p WHERE p.projectName = :name",
+                    DeveloperDao.class).setParameter("name", name).getFirstResult();
+        }
+        catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return 0;
     }
 
     private ProjectDao mapProjectDao(ResultSet resultSet) throws SQLException {

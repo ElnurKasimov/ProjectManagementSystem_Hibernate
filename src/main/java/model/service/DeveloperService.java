@@ -34,6 +34,66 @@ public class DeveloperService {
         this.skillService = skillService;
     }
 
+    public String validateByName(DeveloperDto developerDto, DeveloperDto developerFromDb) {
+        if ((developerDto.getAge() == developerFromDb.getAge()) &&
+                (developerDto.getCompany().getCompanyName().equals(developerFromDb.getCompany().getCompanyName()))
+                && (developerDto.getSalary() == developerFromDb.getSalary())) {
+            return "";
+        } else return String.format("\tDeveloper  %s %s  already exists with different another data." +
+                " Please enter correct data", developerDto.getLastName(), developerDto.getFirstName());
+    }
+
+    public List<DeveloperDto> findAllDevelopers() {
+        return developerStorage.findAll().stream()
+                .map(DeveloperConverter::from)
+                .collect(Collectors.toList());
+    }
+
+    public DeveloperDto getByName(String lastName, String firstName) {
+        return developerStorage.findByName(lastName, firstName).map(DeveloperConverter::from).orElse(null);
+    }
+
+    public long getIdByName(String lastName, String firstName) {
+        return developerStorage.getIdByName(lastName, firstName);
+    }
+
+    public boolean isExist(String lastName, String firstName) {
+        return developerStorage.isExist(lastName, firstName);
+    }
+
+    public List<String> getListNamesDevelopersWithCertainLanguage(String language) {
+        List<String> result = new ArrayList<>();
+        Set<DeveloperDao> developersFromDb = developerStorage.getDevelopersWithCertainLanguage(language);
+        developersFromDb.forEach(dev -> result.add(dev.getLastName() + " " + dev.getFirstName()));
+        return  result;
+    }
+
+    ;
+
+    public List<String> getListNamesDevelopersWithCertainLevel(String level) {
+        List<String> result = new ArrayList<>();
+        Set<DeveloperDao> developersFromDb = developerStorage.getDevelopersWithCertainLevel(level);
+        developersFromDb.forEach(dev -> result.add(dev.getLastName() + " " + dev.getFirstName()));
+        return  result;
+    }
+
+    ;
+
+    public List<String> getDevelopersNamesByProjectName(String name) {
+        List<String> result = new ArrayList<>();
+        Set<DeveloperDao> developersFromDB = developerStorage.getDevelopersNamesByProjectName(name);
+        developersFromDB.forEach(dev -> result.add(dev.getLastName() + " " + dev.getFirstName()));
+        return result;
+    }
+
+    public String findDeveloperForUpdate(String lastName, String firstName) {
+        return developerStorage.findByName(lastName, firstName).isPresent() ?
+                "" : "There is no developer with such name in the database. Please, input correct data.";
+    }
+
+
+
+
     public String saveDeveloper(String lastName, String firstName, int age, String companyName, int salary) {
         String result = "";
         CompanyDto companyDto = null;
@@ -78,89 +138,6 @@ public class DeveloperService {
         return String.format("Developer %s %s successfully added into database with all necessary relations."
                 , developerDto.getLastName(), developerDto.getFirstName());
     }
-
-    public String validateByName(DeveloperDto developerDto, DeveloperDto developerFromDb) {
-        if ((developerDto.getAge() == developerFromDb.getAge()) &&
-                (developerDto.getCompany().getCompanyName().equals(developerFromDb.getCompany().getCompanyName()))
-                && (developerDto.getSalary() == developerFromDb.getSalary())) {
-            return "";
-        } else return String.format("\tDeveloper  %s %s  already exists with different another data." +
-                " Please enter correct data", developerDto.getLastName(), developerDto.getFirstName());
-    }
-
-    public List<DeveloperDto> findAllDevelopers() {
-        return developerStorage.findAll().stream()
-                .map(DeveloperConverter::from)
-                .collect(Collectors.toList());
-    }
-
-    public DeveloperDto getByName(String lastName, String firstName) {
-        return developerStorage.findByName(lastName, firstName).map(DeveloperConverter::from).orElse(null);
-    }
-
-    public long getIdByName(String lastName, String firstName) {
-        return developerStorage.getIdByName(lastName, firstName);
-    }
-
-    public void getInfoByName(String lastName, String firstName) {
-//        List<String> result = new ArrayList<>();
-//        DeveloperDto developerDto = DeveloperConverter.from(developerStorage.findByName(lastName, firstName).get());
-//        result.add(String.format("\t\tDeveloper  %s %s  :", developerDto.getLastName(), developerDto.getFirstName()));
-//        result.add("\t\t\tAge : " + developerDto.getAge() + ",");
-//        result.add(String.format("\t\t\tWorks in company %s, with salary %d",
-//                developerDto.getCompany().getCompanyName(), developerDto.getSalary()));
-//        StringBuilder projectsName = new StringBuilder();
-//        projectsName.append("\t\t\tParticipates in such projects :");
-//        List<String> projectsList = projectStorage.getProjectsNameByDeveloperId(developerDto.getDeveloper_id());
-//        for (String project : projectsList) {
-//            projectsName.append(" " + project + ",");
-//        }
-//        projectsName.deleteCharAt(projectsName.length() - 1);
-//        result.add(projectsName.toString());
-//        StringBuilder skillsName = new StringBuilder();
-//        skillsName.append("\t\t\tHas skill set :");
-//        Set<SkillDto> skillsList = skillStorage.getSkillSetByDeveloperId(developerDto.getDeveloper_id())
-//                .stream().map(SkillConverter::from).collect(Collectors.toSet());
-//        for (SkillDto skill : skillsList) {
-//            skillsName.append(skill.getLanguage() + "  - " + skill.getLevel() + ",");
-//        }
-//        skillsName.deleteCharAt(skillsName.length() - 1);
-//        result.add(skillsName.toString());
-    }
-
-    ;
-
-    public boolean isExist(String lastName, String firstName) {
-        return developerStorage.isExist(lastName, firstName);
-    }
-
-    public List<String> getListNamesDevelopersWithCertainLanguage(String language) {
-        List<String> result = new ArrayList<>();
-        Set<DeveloperDao> developersFromDb = developerStorage.getDevelopersWithCertainLanguage(language);
-        developersFromDb.forEach(dev -> result.add(dev.getLastName() + " " + dev.getFirstName()));
-        return  result;
-    }
-
-    ;
-
-    public List<String> getListNamesDevelopersWithCertainLevel(String level) {
-        List<String> result = new ArrayList<>();
-        Set<DeveloperDao> developersFromDb = developerStorage.getDevelopersWithCertainLevel(level);
-        developersFromDb.forEach(dev -> result.add(dev.getLastName() + " " + dev.getFirstName()));
-        return  result;
-    }
-
-    ;
-
-    public List<String> getDevelopersNamesByProjectName(String projectName) {
-        return developerStorage.getDevelopersNamesByProjectName(projectName);
-    }
-
-    public String findDeveloperForUpdate(String lastName, String firstName) {
-        return developerStorage.findByName(lastName, firstName).isPresent() ?
-                "" : "There is no developer with such name in the database. Please, input correct data.";
-    }
-
     public String updateDeveloper(DeveloperDto developerDtoToUpdate, String[] projectsNames, Set<SkillDto> skillsDto) {
 
         DeveloperDto updatedDeveloperDto = DeveloperConverter.from(developerStorage.update(DeveloperConverter.to(developerDtoToUpdate)));

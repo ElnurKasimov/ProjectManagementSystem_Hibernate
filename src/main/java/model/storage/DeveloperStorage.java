@@ -209,22 +209,16 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
         return developersNames;
     }
 
-    public List<String> getDevelopersNamesByProjectName(String projectName) {
-        List<String> developersNames = new ArrayList<>();
-//        try (Connection connection = manager.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(GET_PROJECT_DEVELOPERS)){
-//            statement.setString(1, projectName);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                String lastName = rs.getString("lastname");
-//                String firstName = rs.getString("firstname");
-//                developersNames.add(String.format("%s %s,", lastName, firstName));
-//            }
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return developersNames;
+    public Set<DeveloperDao> getDevelopersNamesByProjectName(String projectName) {
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery(
+                            "SELECT d FROM DeveloperDao d JOIN d.projects p WHERE p.projectName = :name", DeveloperDao.class)
+                    .setParameter("name", projectName).getResultStream().collect(Collectors.toSet());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new HashSet<>();
     }
 
     public long getQuantityOfProjectDevelopers(String name) {

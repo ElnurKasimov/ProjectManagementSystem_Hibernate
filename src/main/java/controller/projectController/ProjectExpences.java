@@ -59,7 +59,7 @@ public class ProjectExpences extends HttpServlet {
             result = "Sum of salary all developers participate in the project  '" + projectName + "'  -  ";
             expenses = projectService.getProjectExpences(projectName);
         } else {
-            result = "There is no project with such  mane in the database. Please enter correct name.";
+            result = "There is no project with name '" + projectName + "' in the database. Please enter correct name.";
         }
         req.setAttribute("expenses", expenses);
         req.setAttribute("result", result);

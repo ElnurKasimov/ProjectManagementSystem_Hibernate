@@ -17,12 +17,14 @@ import java.util.*;
 public class ListProjectDevelopers extends HttpServlet {
     private static HibernateProvider connectionProvider;
     private static DeveloperStorage developerStorage;
+    private static DeveloperService developerService;
     private static CompanyStorage companyStorage;
     private static CompanyService companyService;
     private static CustomerStorage customerStorage;
     private static CustomerService customerService;
     private static ProjectStorage projectStorage;
     private static ProjectService projectService;
+    private static SkillService skillService;
     private static SkillStorage skillStorage;
     private static RelationStorage relationStorage;
     private static RelationService relationService;
@@ -32,6 +34,7 @@ public class ListProjectDevelopers extends HttpServlet {
         connectionProvider = new HibernateProvider();
         try {
             skillStorage = new SkillStorage(connectionProvider);
+            skillService = new SkillService(skillStorage);
             relationStorage = new RelationStorage(connectionProvider);
             relationService = new RelationService(relationStorage);
             companyStorage = new CompanyStorage(connectionProvider);
@@ -42,6 +45,8 @@ public class ListProjectDevelopers extends HttpServlet {
             projectStorage = new ProjectStorage(connectionProvider, companyStorage, customerStorage);
             projectService = new ProjectService(projectStorage, developerStorage, companyService,
                     customerService, relationService);
+            developerService = new DeveloperService(developerStorage, projectService, projectStorage,
+                    skillStorage, companyStorage, relationService, skillService);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -54,7 +59,7 @@ public class ListProjectDevelopers extends HttpServlet {
         List<String> projects = new ArrayList<>();
         if(projectService.isExist(projectName)) {
             result = "Such developers develop the project '" + projectName + "' :";
-            projects = projectService.getDevelopersNamesByProjectName(projectName);
+            projects = developerService.getDevelopersNamesByProjectName(projectName);
         } else {
             result = "There is no project with such  mane in the database. Please enter correct name.";
         }

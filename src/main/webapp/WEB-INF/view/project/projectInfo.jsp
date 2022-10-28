@@ -17,9 +17,9 @@
         </form>
         <c:out value="${result}"/>
          <c:if test="${project !=null}">
-             <c:out value="'${project.project_name}'  :"/><br>
-             <c:out value="Is ordered by '${project.customerDto.customer_name}' with budget ${project.cost}"/><br>
-             <c:out value="Is developed by '${project.companyDto.company_name}' from ${project.start_date}"/><br>
+             <c:out value="'${project.projectName}'  :"/><br>
+             <c:out value="Is ordered by '${project.customer.customerName}' with budget ${project.cost}"/><br>
+             <c:out value="Is developed by '${project.company.companyName}' from ${project.startDate}"/><br>
          </c:if>
     </body>
 </html>
