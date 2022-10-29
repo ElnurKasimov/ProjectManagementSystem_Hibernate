@@ -150,7 +150,8 @@ public class SkillStorage implements Storage<SkillDao> {
     public SkillDao update(SkillDao entity) {return new SkillDao();}
 
     @Override
-    public void delete(SkillDao entity) {
+    public List<String>  delete(SkillDao entity) {
+        return null;
     }
 
     public Set<SkillDao> getSkillSetByDeveloperId(long id) {

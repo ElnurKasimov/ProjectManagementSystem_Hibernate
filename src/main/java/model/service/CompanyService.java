@@ -5,10 +5,7 @@ import model.dto.CompanyDto;
 import model.service.converter.CompanyConverter;
 import model.storage.CompanyStorage;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CompanyService {
@@ -67,13 +64,12 @@ public  CompanyService (CompanyStorage companyStorage) {
         }
     }
 
-    public String deleteCompany (String name) {
-        String result = "";
+    public List<String> deleteCompany (String name) {
+        List<String> result = new ArrayList<>();
         Optional<CompanyDao> companyDaoFromDb = companyStorage.findByName(name);
         if(companyDaoFromDb.isPresent()) {
-            companyStorage.delete(companyDaoFromDb.get());
-            result = "Company " + name + " successfully deleted from the database";
-        } else { result = "There is no company with such name in the database. Please enter correct data.";}
+            result =  companyStorage.delete(companyDaoFromDb.get());
+        } else { result.add("There is no company with such name in the database. Please enter correct data.");}
         return result;
     }
 

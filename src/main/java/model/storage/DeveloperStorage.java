@@ -155,7 +155,7 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
     }
 
     @Override
-    public void delete(DeveloperDao entity) {
+    public List<String>  delete(DeveloperDao entity) {
 //        try (Connection connection = manager.getConnection();
 //             PreparedStatement statement = connection.prepareStatement(DELETE)) {
 //            statement.setString(1, entity.getLastName());
@@ -165,6 +165,7 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
 //        catch (SQLException exception) {
 //            exception.printStackTrace();
 //        }
+        return null;
     }
 
     public Set<DeveloperDao> getDevelopersWithCertainLanguage(String language) {
@@ -234,19 +235,6 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
             exception.printStackTrace();
         }
         return quantity;
-    }
-    private DeveloperDao mapDeveloperDao(ResultSet resultSet) throws SQLException {
-        DeveloperDao developerDao = null;
-//        while (resultSet.next()) {
-//            developerDao = new DeveloperDao();
-//            developerDao.setDeveloper_id(resultSet.getLong("developer_id"));
-//            developerDao.setLastName(resultSet.getString("lastName"));
-//            developerDao.setFirstName(resultSet.getString("firstName"));
-//            developerDao.setAge(resultSet.getInt("age"));
-//            developerDao.setSalary(resultSet.getInt("salary"));
-//            developerDao.setCompanyDao(companyStorage.findById(resultSet.getLong("company_id")).get());
-//        }
-        return developerDao;
     }
 
 }

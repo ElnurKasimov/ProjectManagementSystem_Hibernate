@@ -12,6 +12,6 @@ public interface Storage <T> {
     boolean isExist(long id);
     boolean isExist(String name);
     T update (T entity);
-    void delete(T entity);
+    List<String>  delete(T entity);
 
 }

@@ -116,7 +116,7 @@ public class CustomerStorage implements Storage<CustomerDao> {
     }
 
     @Override
-    public void delete(CustomerDao entity) {
+    public List<String>  delete(CustomerDao entity) {
 //        try (Connection connection = manager.getConnection();
 //                 PreparedStatement statement = connection.prepareStatement(DELETE)) {
 //                statement.setString(1, entity.getCustomer_name());
@@ -125,6 +125,7 @@ public class CustomerStorage implements Storage<CustomerDao> {
 //        catch (SQLException exception) {
 //            exception.printStackTrace();
 //        }
+        return null;
     }
 
     private CustomerDao mapCustomerDao(ResultSet resultSet) throws SQLException {

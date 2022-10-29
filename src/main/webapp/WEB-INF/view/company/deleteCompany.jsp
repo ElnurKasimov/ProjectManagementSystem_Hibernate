@@ -15,6 +15,8 @@
                 <input type="text" id="companyName" name="companyName"><br>
                 <button type="submit">Delete</button>
             </form>
-            <c:out value="${result}"/>
+            <c:forEach var = "line" items="${result}">
+                <c:out value="${line}"/><br>
+           </c:forEach>
     </body>
 </html>

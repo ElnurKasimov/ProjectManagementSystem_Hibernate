@@ -3,6 +3,8 @@ package model.storage;
 
 import model.config.HibernateProvider;
 import model.dao.CompanyDao;
+import model.dao.DeveloperDao;
+import model.dao.ProjectDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -93,11 +95,6 @@ public class CompanyStorage implements Storage<CompanyDao> {
         try (Session session = connectionProvider.openSession()) {
             Transaction transaction = session.beginTransaction();
             updatedCompanyDao = session.merge(entity);
-//            session.createQuery("update CompanyDao c set c.companyName=:name,  c.rating=:rating  WHERE c.company_id=:id", CompanyDao.class)
-//                    .setParameter("name", entity.getCompanyName())
-//                    .setParameter("rating", entity.getRating())
-//                    .setParameter("id", entity.getCompany_id())
-//                    .executeUpdate();
             transaction.commit();
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -106,25 +103,28 @@ public class CompanyStorage implements Storage<CompanyDao> {
     }
 
     @Override
-    public void delete(CompanyDao entity) {
-//        try (Connection connection = manager.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(DELETE)) {
-//            statement.setString(1, entity.getCompany_name());
-//            statement.executeUpdate();
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
+    public List<String> delete(CompanyDao entity) {
+        List<String> result = new ArrayList<>();
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Set<DeveloperDao> developers = entity.getDevelopers();
+            Set<ProjectDao> projects = entity.getProjects();
+            if (developers.isEmpty() && projects.isEmpty()) {
+                session.remove(entity);
+                transaction.commit();
+                result.add("Company " + entity.getCompanyName() + " successfully deleted from the database");
+            } else {
+                result.add("Please note that " + entity.getCompanyName() + ":");
+                result.add("- develops such projects :");
+                projects.forEach(project -> result.add(project.getProjectName()));
+                result.add(" - employs the following developers:");
+                developers.forEach(dev -> result.add(dev.getLastName() + " " +dev.getFirstName()));
+                result.add("Before deleting the company change the data of the relevant projects and developers first.");
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return result;
     }
 
-    private CompanyDao mapCompanyDao(ResultSet resultSet) throws SQLException {
-        CompanyDao companyDao = null;
-//        while (resultSet.next()) {
-//            companyDao = new CompanyDao();
-//            companyDao.setCompany_id(resultSet.getLong("company_id"));
-//            companyDao.setCompany_name(resultSet.getString("company_name"));
-//            companyDao.setRating(CompanyDao.Rating.valueOf(resultSet.getString("rating")));
-//        }
-        return companyDao;
-    }
 }

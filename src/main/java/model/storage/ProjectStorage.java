@@ -147,7 +147,7 @@ public class ProjectStorage implements Storage<ProjectDao> {
     }
 
     @Override
-    public void delete(ProjectDao entity) {
+    public List<String>  delete(ProjectDao entity) {
 //        try (Connection connection = manager.getConnection();
 //             PreparedStatement statement = connection.prepareStatement(DELETE)) {
 //            statement.setString(1, entity.getProject_name());
@@ -156,6 +156,7 @@ public class ProjectStorage implements Storage<ProjectDao> {
 //        catch (SQLException exception) {
 //            exception.printStackTrace();
 //        }
+        return null;
     }
 
     public List<ProjectDao> getCompanyProjects (String companyName) {
@@ -261,23 +262,6 @@ public class ProjectStorage implements Storage<ProjectDao> {
             exception.printStackTrace();
         }
         return 0;
-    }
-
-    private ProjectDao mapProjectDao(ResultSet resultSet) throws SQLException {
-        ProjectDao projectDao = null;
-//        while (resultSet.next()) {
-//            projectDao = new ProjectDao();
-//            projectDao.setProject_id(resultSet.getLong("project_id"));
-//            projectDao.setProject_name(resultSet.getString("project_name"));
-//            CompanyDao companyDao = companyStorage.findById(resultSet.getLong("company_id")).get();
-//            projectDao.setCompanyDao(companyDao);
-//            CustomerDao customerDao = customerStorage.findById(resultSet.getLong("customer_id")).get();
-//            projectDao.setCustomerDao(customerDao);
-//            projectDao.setCost(resultSet.getInt("cost"));
-//            projectDao.setStart_date(Date.valueOf(LocalDate.parse(resultSet.getString("start_date"),
-//                    DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-//        }
-        return projectDao;
     }
 
 }
