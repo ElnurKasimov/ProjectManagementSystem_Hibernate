@@ -6,6 +6,7 @@ import model.service.converter.CustomerConverter;
 import model.storage.CustomerStorage;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,6 +18,16 @@ public  CustomerService (CustomerStorage customerStorage) {
     this.customerStorage = customerStorage;
 }
 
+    public Optional<CustomerDto> findByName(String name) {
+        Optional<CustomerDao> customerDaoFromDb = customerStorage.findByName(name);
+        return customerDaoFromDb.map(CustomerConverter::from);
+    }
+
+    public List<CustomerDto> findAllCustomers() {
+        return customerStorage.findAll().stream()
+                .map(CustomerConverter::from)
+                .collect(Collectors.toList());
+    }
 
     public String save (CustomerDto customerDto) {
         String result = "";
@@ -38,27 +49,6 @@ public  CustomerService (CustomerStorage customerStorage) {
         } else return "Ok. A customer with such parameters is present in the database already.";
     }
 
-    public Optional<CustomerDto> findByName(String name) {
-        Optional<CustomerDao> customerDaoFromDb = customerStorage.findByName(name);
-        return customerDaoFromDb.map(CustomerConverter::from);
-    }
-
-    public List<CustomerDto> findAllCustomers() {
-        return customerStorage.findAll().stream()
-                .map(CustomerConverter::from)
-                .collect(Collectors.toList());
-    }
-
-    public String deleteCustomer (String name) {
-        String result = "";
-        Optional<CustomerDao> customerDaoFromDb = customerStorage.findByName(name);
-        if(customerDaoFromDb.isPresent()) {
-            customerStorage.delete(customerDaoFromDb.get());
-            result = "Customer " + name + " successfully deleted from the database";
-        } else { result = "There is no customer with such name in the database. Please enter correct data.";}
-        return result;
-    }
-
     public String updateCustomer(CustomerDto customerDto) {
         CustomerDto customerDtoToUpdate = null;
         Optional<CustomerDto>  customerDtoFromDb = findByName(customerDto.getCustomerName());
@@ -71,4 +61,14 @@ public  CustomerService (CustomerStorage customerStorage) {
             return String.format("Customer %s successfully updated.", updatedCustomerDto.getCustomerName());
         }
     }
-}
+
+    public List<String> deleteCustomer (String name) {
+        List<String> result = new ArrayList<>();
+        Optional<CustomerDao> customerDaoFromDb = customerStorage.findByName(name);
+        if(customerDaoFromDb.isPresent()) {
+            result =  customerStorage.delete(customerDaoFromDb.get());
+        } else { result.add("There is no customer with such name in the database. Please enter correct data.");}
+        return result;
+    }
+
+ }

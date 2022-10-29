@@ -13,8 +13,10 @@
             <form action="/customer/update" method="post">
                 <label for="customerName"> Customer name: </label>
                 <input type="text" id="customerName" name="customerName"><br>
-                <label for="reputation"> Reputation (insolvent, trustworthy, respectable) : </label>
-                 <input type="text" id="reputation" name="reputation"><br>
+                <div>Customer reputation:</div>
+                <label><input type="radio" name="reputation" value="insolvent">Insolvent</label>
+                <label><input type="radio" name="reputation" value="trustworthy">Trustworthy</label>
+                <label><input type="radio" name="reputation" value="respectable" checked="checked">Respectable</label><br>
                 <button type="submit">Update</button>
             </form>
     </body>

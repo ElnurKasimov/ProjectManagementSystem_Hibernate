@@ -3,6 +3,8 @@ package model.storage;
 import model.config.HibernateProvider;
 import model.dao.CompanyDao;
 import model.dao.CustomerDao;
+import model.dao.DeveloperDao;
+import model.dao.ProjectDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -26,28 +28,6 @@ public class CustomerStorage implements Storage<CustomerDao> {
     }
 
     @Override
-    public CustomerDao save(CustomerDao entity) {
-//        try (Connection connection = manager.getConnection();
-//                PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
-//            statement.setString(1, entity.getCustomer_name());
-//            statement.setString(2, entity.getReputation().toString());
-//            statement.executeUpdate();
-//            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-//                if (generatedKeys.next()) {
-//                    entity.setCustomer_id(generatedKeys.getInt(1));
-//                }
-//                else {
-//                    throw new SQLException("Customer saving was interrupted, ID has not been obtained.");
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            throw new RuntimeException("Customer was not created");
-//        }
-        return entity;
-    }
-
-    @Override
     public Optional<CustomerDao> findById(long id) {
 //        try(Connection connection = manager.getConnection();
 //            PreparedStatement statement = connection.prepareStatement(FIND_BY_ID)) {
@@ -64,16 +44,14 @@ public class CustomerStorage implements Storage<CustomerDao> {
 
     @Override
     public Optional<CustomerDao> findByName(String name) {
-//         try(Connection connection = manager.getConnection();
-//                PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)) {
-//        statement.setString(1, name);
-//        ResultSet resultSet = statement.executeQuery();
-//        CustomerDao customerDao = mapCustomerDao(resultSet);
-//        return Optional.ofNullable(customerDao);
-//    }
-//        catch (SQLException exception) {
-//        exception.printStackTrace();
-//    }
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery("FROM CustomerDao as c WHERE c.customerName like :name"
+                            , CustomerDao.class)
+                           .setParameter("name", name).uniqueResultOptional();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         return Optional.empty();
     }
 
@@ -99,44 +77,52 @@ public class CustomerStorage implements Storage<CustomerDao> {
         return false;
     }
 
+
+    @Override
+    public CustomerDao save(CustomerDao entity) {
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return entity;
+    }
+
     @Override
     public CustomerDao update(CustomerDao entity) {
-        CustomerDao customerDao = null;
-//        try (Connection connection = manager.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(UPDATE)) {
-//            statement.setString(1, entity.getReputation().toString());
-//            statement.setString(2, entity.getCustomer_name());
-//            ResultSet resultSet = statement.executeQuery();
-//            customerDao = mapCustomerDao(resultSet);
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return customerDao;
+        CustomerDao updatedCustomerDao = null;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            updatedCustomerDao = session.merge(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return updatedCustomerDao;
     }
 
     @Override
     public List<String>  delete(CustomerDao entity) {
-//        try (Connection connection = manager.getConnection();
-//                 PreparedStatement statement = connection.prepareStatement(DELETE)) {
-//                statement.setString(1, entity.getCustomer_name());
-//                statement.executeUpdate();
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return null;
+        List<String> result = new ArrayList<>();
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Set<ProjectDao> projects = entity.getProjects();
+            if (projects.isEmpty()) {
+                session.remove(entity);
+                transaction.commit();
+                result.add("Customer " + entity.getCustomerName() + " successfully deleted from the database");
+            } else {
+                result.add("Please note that " + entity.getCustomerName() + "ordered such projects :");
+                projects.forEach(project -> result.add(project.getProjectName()));
+                result.add("Before deleting the customer change the data of the relevant projects first.");
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return result;
     }
 
-    private CustomerDao mapCustomerDao(ResultSet resultSet) throws SQLException {
-        CustomerDao customerDao = null;
-//        while (resultSet.next()) {
-//            customerDao = new CustomerDao();
-//            customerDao.setCustomer_id(resultSet.getLong("customer_id"));
-//            customerDao.setCustomer_name(resultSet.getString("customer_name"));
-//            customerDao.setReputation(CustomerDao.Reputation.valueOf(resultSet.getString("reputation")));
-//        }
-        return customerDao;
-    }
 
 }

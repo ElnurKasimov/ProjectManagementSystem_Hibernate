@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 @WebServlet(urlPatterns = "/customer/delete")
@@ -33,7 +34,7 @@ public class deleteCustomer extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String customerName = req.getParameter("customerName");
-        String result = customerService.deleteCustomer(customerName);
+        List<String> result = customerService.deleteCustomer(customerName);
         req.setAttribute("result", result);
         req.getRequestDispatcher("/WEB-INF/view/customer/deleteCustomer.jsp").forward(req, resp);
 

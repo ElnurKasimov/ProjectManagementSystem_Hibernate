@@ -14,9 +14,9 @@
                 <label for="customerName"> Customer name: </label>
                 <input type="text" id="customerName" name="customerName"><br>
                 <div>Customer reputation:</div>
-                <label><input type="radio" name="reputation" value="insolvent" checked="checked">Insolvent</label>
+                <label><input type="radio" name="reputation" value="insolvent">Insolvent</label>
                 <label><input type="radio" name="reputation" value="trustworthy">Trustworthy</label>
-                <label><input type="radio" name="reputation" value="respectable">Respectable</label><br>
+                <label><input type="radio" name="reputation" value="respectable" checked="checked">Respectable</label><br>
                 <button type="submit">Save</button>
             </form>
     </body>
