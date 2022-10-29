@@ -18,27 +18,6 @@ public  CompanyService (CompanyStorage companyStorage) {
     this.companyStorage = companyStorage;
 }
 
-public String save (CompanyDto companyDto) {
-    String result = "";
-    Optional<CompanyDao> companyFromDb = companyStorage.findByName(companyDto.getCompanyName());
-    System.out.println(companyFromDb);
-    if (companyFromDb.isPresent()) {
-        result = validateByName(companyDto, CompanyConverter.from(companyFromDb.get()));
-    } else {
-        companyStorage.save(CompanyConverter.to(companyDto));
-        result = "Company " + companyDto.getCompanyName() + " successfully added to the database";
-    };
-    return result;
-}
-
-    public String  validateByName(CompanyDto companyDto, CompanyDto companyFromDb) {
-        if (!companyDto.getRating().toString().equals(companyFromDb.getRating().toString())) {
-            return String.format("Company with name '%s' already exist with different " +
-                    "rating '%s'. Please enter correct data.",
-                    companyDto.getCompanyName(), companyFromDb.getRating().toString());
-        } else return "Ok. A company with such parameters is present in the database already.";
-    }
-
     public Set<CompanyDto> findAllCompanies() {
         return companyStorage.findAll().stream()
                 .map(CompanyConverter::from)
@@ -55,28 +34,24 @@ public String save (CompanyDto companyDto) {
         return companyDaoFromDb.map(CompanyConverter::from);
     }
 
-    public CompanyDto createCompany() {
-        System.out.print("Enter company name : ");
-        Scanner sc = new Scanner(System.in);
-        String newCompanyName = sc.nextLine();
-        System.out.print("Enter company rating (high, middle, low) : ");
-        String newCompanyRating = sc.nextLine();
-        return new CompanyDto(newCompanyName, CompanyDto.Rating.valueOf(newCompanyRating));
+    public String save (CompanyDto companyDto) {
+        String result = "";
+        Optional<CompanyDao> companyFromDb = companyStorage.findByName(companyDto.getCompanyName());
+        if (companyFromDb.isPresent()) {
+            result = validateByName(companyDto, CompanyConverter.from(companyFromDb.get()));
+        } else {
+            companyStorage.save(CompanyConverter.to(companyDto));
+            result = "Company " + companyDto.getCompanyName() + " successfully added to the database";
+        };
+        return result;
     }
 
-//    public CompanyDto checkByName (String name) {
-//        CompanyDto companyDto = findByName(name).orElseGet(this::createCompany);
-//        return  save(companyDto);
-//    }
-
-    public String deleteCompany (String name) {
-        String result = "";
-        Optional<CompanyDao> companyDaoFromDb = companyStorage.findByName(name);
-        if(companyDaoFromDb.isPresent()) {
-            companyStorage.delete(companyDaoFromDb.get());
-            result = "Company " + name + " successfully deleted from the database";
-        } else { result = "There is no company with such name in the database. Please enter correct data.";}
-        return result;
+    public String  validateByName(CompanyDto companyDto, CompanyDto companyFromDb) {
+        if (!companyDto.getRating().toString().equals(companyFromDb.getRating().toString())) {
+            return String.format("Company with name '%s' already exist with different " +
+                            "rating '%s'. Please enter correct data.",
+                    companyDto.getCompanyName(), companyFromDb.getRating().toString());
+        } else return "Ok. A company with such parameters is present in the database already.";
     }
 
     public String updateCompany(CompanyDto companyDto) {
@@ -90,6 +65,16 @@ public String save (CompanyDto companyDto) {
             CompanyDto updatedCompanyDto = CompanyConverter.from(companyStorage.update(CompanyConverter.to(companyDtoToUpdate)));
             return String.format("Company %s successfully updated.", updatedCompanyDto.getCompanyName());
         }
+    }
+
+    public String deleteCompany (String name) {
+        String result = "";
+        Optional<CompanyDao> companyDaoFromDb = companyStorage.findByName(name);
+        if(companyDaoFromDb.isPresent()) {
+            companyStorage.delete(companyDaoFromDb.get());
+            result = "Company " + name + " successfully deleted from the database";
+        } else { result = "There is no company with such name in the database. Please enter correct data.";}
+        return result;
     }
 
 }

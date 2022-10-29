@@ -81,7 +81,7 @@ public class DeveloperService {
 
     public List<String> getDevelopersNamesByProjectName(String name) {
         List<String> result = new ArrayList<>();
-        Set<DeveloperDao> developersFromDB = developerStorage.getDevelopersNamesByProjectName(name);
+        Set<DeveloperDao> developersFromDB = developerStorage.getDevelopersByProjectName(name);
         developersFromDB.forEach(dev -> result.add(dev.getLastName() + " " + dev.getFirstName()));
         return result;
     }

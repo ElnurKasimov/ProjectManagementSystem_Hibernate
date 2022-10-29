@@ -2,6 +2,7 @@ package model.storage;
 
 import model.config.HibernateProvider;
 import model.dao.DeveloperDao;
+import model.dao.ProjectDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -209,12 +210,12 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
         return developersNames;
     }
 
-    public Set<DeveloperDao> getDevelopersNamesByProjectName(String projectName) {
+    public Set<DeveloperDao> getDevelopersByProjectName(String name) {
         try (Session session = connectionProvider.openSession()) {
             Transaction transaction = session.beginTransaction();
-            return session.createQuery(
-                            "SELECT d FROM DeveloperDao d JOIN d.projects p WHERE p.projectName = :name", DeveloperDao.class)
-                    .setParameter("name", projectName).getResultStream().collect(Collectors.toSet());
+            ProjectDao projectDao = session.createQuery("FROM ProjectDao p WHERE p.projectName = :name", ProjectDao.class)
+                    .setParameter("name", name).getSingleResult();
+            return projectDao.getDevelopers();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -223,17 +224,15 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
 
     public long getQuantityOfProjectDevelopers(String name) {
         long quantity = 0;
-//        try(Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(GET_QUANTITY_PROJECT_DEVELOPERS)) {
-//            statement.setString(1, name);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                quantity = rs.getLong("count");
-//            }
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            quantity =  session.createQuery(
+                            "SELECT d FROM DeveloperDao d JOIN d.projects p WHERE p.projectName = :name", DeveloperDao.class)
+                    .setParameter("name", name)
+                    .stream().count();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         return quantity;
     }
     private DeveloperDao mapDeveloperDao(ResultSet resultSet) throws SQLException {

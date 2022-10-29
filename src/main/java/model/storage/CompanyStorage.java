@@ -26,28 +26,6 @@ public class CompanyStorage implements Storage<CompanyDao> {
     }
 
     @Override
-    public CompanyDao save(CompanyDao entity) {
-//        try (Connection connection = manager.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)){
-//            statement.setString(1, entity.getCompany_name());
-//            statement.setString(2, entity.getRating().toString());
-//            statement.executeUpdate();
-//            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-//                if (generatedKeys.next()) {
-//                    entity.setCompany_id(generatedKeys.getInt(1));
-//                }
-//                else {
-//                    throw new SQLException("Company saving was interrupted, ID has not been obtained.");
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            throw new RuntimeException("The company was not created");
-//        }
-        return entity;
-    }
-
-    @Override
     public Optional<CompanyDao> findById(long id) {
 //        try(Connection connection = manager.getConnection();
 //            PreparedStatement statement = connection.prepareStatement(FIND_BY_ID)) {
@@ -98,19 +76,33 @@ public class CompanyStorage implements Storage<CompanyDao> {
     }
 
     @Override
+    public CompanyDao save(CompanyDao entity) {
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return entity;
+    }
+
+    @Override
     public CompanyDao update(CompanyDao entity) {
-       CompanyDao companyDao = null;
-//        try (Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(UPDATE)) {
-//            statement.setString(1, entity.getRating().toString());
-//            statement.setString(2, entity.getCompany_name());
-//            ResultSet resultSet = statement.executeQuery();
-//            companyDao = mapCompanyDao(resultSet);
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return companyDao;
+       CompanyDao updatedCompanyDao = null;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            updatedCompanyDao = session.merge(entity);
+//            session.createQuery("update CompanyDao c set c.companyName=:name,  c.rating=:rating  WHERE c.company_id=:id", CompanyDao.class)
+//                    .setParameter("name", entity.getCompanyName())
+//                    .setParameter("rating", entity.getRating())
+//                    .setParameter("id", entity.getCompany_id())
+//                    .executeUpdate();
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return updatedCompanyDao;
     }
 
     @Override
