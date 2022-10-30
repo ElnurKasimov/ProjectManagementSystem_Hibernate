@@ -1,7 +1,6 @@
 package model.storage;
 
-import model.config.HibernateProvider;
-import model.dao.ProjectDao;
+import controller.customerController.config.HibernateProvider;
 import model.dao.SkillDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

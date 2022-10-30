@@ -1,12 +1,11 @@
 package model.storage;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 

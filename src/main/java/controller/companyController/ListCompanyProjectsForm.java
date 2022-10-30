@@ -1,4 +1,4 @@
-package controller.developerController;
+package controller.companyController;
 
 import controller.customerController.config.HibernateProvider;
 
@@ -9,9 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/developer/update_find/form")
-public class UpdateDeveloperFindForm extends HttpServlet {
+@WebServlet(urlPatterns = "/company/list_projects/form")
+public class ListCompanyProjectsForm extends HttpServlet {
     private static HibernateProvider connectionProvider;
+
     @Override
     public void init() throws ServletException {
         connectionProvider = new HibernateProvider();
@@ -19,7 +20,7 @@ public class UpdateDeveloperFindForm extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-               req.getRequestDispatcher("/WEB-INF/view/developer/updateDeveloperFindForm.jsp").forward(req, resp);
+               req.getRequestDispatcher("/WEB-INF/view/company/listCompanyProjectsForm.jsp").forward(req, resp);
     }
 
 }

@@ -1,14 +1,15 @@
 package model.service;
 
+import model.dao.CompanyDao;
 import model.dao.CustomerDao;
 import model.dto.CustomerDto;
+import model.dto.ProjectDto;
 import model.service.converter.CustomerConverter;
+import model.service.converter.ProjectConverter;
 import model.storage.CustomerStorage;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CustomerService {
@@ -69,6 +70,12 @@ public  CustomerService (CustomerStorage customerStorage) {
             result =  customerStorage.delete(customerDaoFromDb.get());
         } else { result.add("There is no customer with such name in the database. Please enter correct data.");}
         return result;
+    }
+
+    public Set<ProjectDto> getCustomerProjects(String name) {
+        Optional<CustomerDao>  customerDaoFromDb = customerStorage.findByName(name);
+        return customerDaoFromDb.map(customerDao -> customerDao.getProjects().stream().map(ProjectConverter::from).collect(Collectors.toSet()))
+                .orElseGet(HashSet::new);
     }
 
  }

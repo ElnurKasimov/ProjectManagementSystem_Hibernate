@@ -10,9 +10,9 @@
     </head>
     <body>
         <c:import url="${contextPath}/WEB-INF/view/navigation.jsp"/>
-           <form action="/company/list_projects" method ="post">
-               <label for="companyName"> Company name: </label>
-               <input type="text" id="companyName" name="companyName"><br>
+           <form action="/customer/list_projects" method ="post">
+               <label for="customerName"> Customer name: </label>
+               <input type="text" id="customerName" name="customerName"><br>
                <button type="submit">Find</button>
            </form>
     </body>

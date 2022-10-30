@@ -1,6 +1,6 @@
 package controller.projectController;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.service.CompanyService;
 import model.service.CustomerService;
 import model.service.ProjectService;
@@ -19,7 +19,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 
 @WebServlet(urlPatterns = "/project/update")
 public class UpdateProject extends HttpServlet {

@@ -1,17 +1,11 @@
 package model.storage;
 
-import jakarta.persistence.Query;
-import model.config.HibernateProvider;
-import model.dao.CompanyDao;
-import model.dao.CustomerDao;
-import model.dao.DeveloperDao;
+import controller.customerController.config.HibernateProvider;
 import model.dao.ProjectDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 

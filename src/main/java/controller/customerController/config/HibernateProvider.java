@@ -1,4 +1,4 @@
-package model.config;
+package controller.customerController.config;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

@@ -1,6 +1,6 @@
 package controller.developerController;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.dto.DeveloperDto;
 import model.dto.ProjectDto;
 import model.service.*;

@@ -1,6 +1,6 @@
 package controller.projectController;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.dto.ProjectDto;
 import model.service.*;
 import model.storage.*;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 @WebServlet(urlPatterns = "/project/list_all_projects")
 public class ListOfAllProjects extends HttpServlet {

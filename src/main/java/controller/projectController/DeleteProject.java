@@ -1,6 +1,6 @@
 package controller.projectController;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.service.CompanyService;
 import model.service.CustomerService;
 import model.service.ProjectService;
@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Properties;
 
 @WebServlet(urlPatterns = "/project/delete")
 public class DeleteProject extends HttpServlet {

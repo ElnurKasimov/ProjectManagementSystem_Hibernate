@@ -1,6 +1,6 @@
 package controller.projectController;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.service.*;
 import model.storage.*;
 
@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.Properties;
 
 @WebServlet(urlPatterns = "/project/add")
 public class AddProject extends HttpServlet {

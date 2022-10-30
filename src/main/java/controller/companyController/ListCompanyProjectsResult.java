@@ -2,6 +2,7 @@ package controller.companyController;
 
 import controller.customerController.config.HibernateProvider;
 import model.dto.CompanyDto;
+import model.dto.ProjectDto;
 import model.service.CompanyService;
 import model.storage.CompanyStorage;
 
@@ -12,9 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
+import java.util.Set;
 
-@WebServlet(urlPatterns = "/company/update")
-public class UpdateCompanyResult extends HttpServlet {
+@WebServlet(urlPatterns = "/company/list_projects")
+public class ListCompanyProjectsResult extends HttpServlet {
     private static HibernateProvider connectionProvider;
     private static CompanyStorage companyStorage;
     private static CompanyService companyService;
@@ -33,12 +36,12 @@ public class UpdateCompanyResult extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String companyName = req.getParameter("companyName");
-        String rating = req.getParameter("rating");
-        CompanyDto newCompanyDto = new CompanyDto(companyName, CompanyDto.Rating.valueOf(rating));
-        String result = companyService.updateCompany(newCompanyDto);
-        req.setAttribute("result", result);
-        req.getRequestDispatcher("/WEB-INF/view/company/updateCompany.jsp").forward(req, resp);
-
+        Optional<CompanyDto> companyDto = companyService.findByName(companyName);
+        boolean isPresent = companyDto.isPresent();
+        req.setAttribute("isPresent", isPresent);
+        Set<ProjectDto> projects = companyService.getCompanyProjects(companyName);
+        req.setAttribute("projects", projects);
+        req.getRequestDispatcher("/WEB-INF/view/company/listCompanyProjects.jsp").forward(req, resp);
     }
 
 

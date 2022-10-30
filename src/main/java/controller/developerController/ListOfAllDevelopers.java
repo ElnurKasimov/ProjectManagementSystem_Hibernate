@@ -1,6 +1,6 @@
 package controller.developerController;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.dto.DeveloperDto;
 import model.service.*;
 import model.storage.*;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 @WebServlet(urlPatterns = "/developer/list_all_developers")
 public class ListOfAllDevelopers extends HttpServlet {

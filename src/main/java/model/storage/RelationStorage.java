@@ -1,14 +1,11 @@
 package model.storage;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
 import model.dao.SkillDao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.Set;
 
 public class RelationStorage {

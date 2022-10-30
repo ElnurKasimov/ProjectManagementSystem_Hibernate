@@ -1,6 +1,6 @@
 package controller.customerController;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.dto.CustomerDto;
 import model.service.*;
 import model.storage.*;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 @WebServlet(urlPatterns = "/customer/list_all_customers")
 public class ListOfAllCustomer extends HttpServlet {

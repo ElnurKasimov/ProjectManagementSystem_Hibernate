@@ -25,9 +25,9 @@
     </head>
     <body>
         <c:import url="${contextPath}/WEB-INF/view/navigation.jsp"/>
-         <form action="/company/list_projects" method ="post">
-             <label for="companyName"> Company name: </label>
-             <input type="text" id="companyName" name="companyName"><br>
+         <form action="/customer/list_projects" method ="post">
+             <label for="customerName"> Customer name: </label>
+             <input type="text" id="customerName" name="customerName"><br>
              <button type="submit">Find</button>
          </form>
          <c:choose>
@@ -41,7 +41,7 @@
                              </tr>
                          </c:if>
                          <c:if test="${empty projects}">
-                             <p>This company does not develop any project.</p>
+                             <p>This customer has not ordered any project.</p>
                          </c:if>
                      </thead>
                      <tbody>
@@ -59,7 +59,7 @@
                 </table>
              </c:when>
              <c:otherwise>
-                  <p>There is no company with such name in the database.</p>
+                  <p>There is no customer with such name in the database.</p>
              </c:otherwise>
          </c:choose>
     </body>

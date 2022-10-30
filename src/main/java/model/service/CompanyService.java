@@ -1,8 +1,11 @@
 package model.service;
 
 import model.dao.CompanyDao;
+import model.dao.ProjectDao;
 import model.dto.CompanyDto;
+import model.dto.ProjectDto;
 import model.service.converter.CompanyConverter;
+import model.service.converter.ProjectConverter;
 import model.storage.CompanyStorage;
 
 import java.util.*;
@@ -71,6 +74,12 @@ public  CompanyService (CompanyStorage companyStorage) {
             result =  companyStorage.delete(companyDaoFromDb.get());
         } else { result.add("There is no company with such name in the database. Please enter correct data.");}
         return result;
+    }
+
+    public Set<ProjectDto> getCompanyProjects (String name) {
+        Optional<CompanyDao>  companyDaoFromDb = companyStorage.findByName(name);
+        return companyDaoFromDb.map(companyDao -> companyDao.getProjects().stream().map(ProjectConverter::from).collect(Collectors.toSet()))
+                .orElseGet(HashSet::new);
     }
 
 }

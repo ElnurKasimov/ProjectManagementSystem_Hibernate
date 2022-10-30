@@ -1,6 +1,6 @@
 package controller.companyController;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.service.CompanyService;
 import model.storage.CompanyStorage;
 

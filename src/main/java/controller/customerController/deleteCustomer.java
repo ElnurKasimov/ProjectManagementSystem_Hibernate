@@ -1,6 +1,6 @@
 package controller.customerController;
 
-import model.config.HibernateProvider;
+import controller.customerController.config.HibernateProvider;
 import model.service.CustomerService;
 import model.storage.CustomerStorage;
 
@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 @WebServlet(urlPatterns = "/customer/delete")
 public class deleteCustomer extends HttpServlet {

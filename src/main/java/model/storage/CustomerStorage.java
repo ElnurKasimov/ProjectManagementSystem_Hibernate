@@ -1,9 +1,7 @@
 package model.storage;
 
-import model.config.HibernateProvider;
-import model.dao.CompanyDao;
+import controller.customerController.config.HibernateProvider;
 import model.dao.CustomerDao;
-import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

@@ -1,6 +1,6 @@
 package controller.companyController;
 
-import model.config.HibernateProvider;;
+import controller.customerController.config.HibernateProvider;;
 import model.dto.CompanyDto;
 
 import model.service.*;
@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 @WebServlet(urlPatterns = "/company/list_all_companies")
