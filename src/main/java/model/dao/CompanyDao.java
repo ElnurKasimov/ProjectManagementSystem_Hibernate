@@ -46,13 +46,13 @@ public class CompanyDao {
         return rating;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="company")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="company", cascade = CascadeType.PERSIST)
     @Fetch(FetchMode.SUBSELECT)
     public Set<DeveloperDao> getDevelopers() {
         return developers;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.PERSIST)
     @Fetch(FetchMode.SUBSELECT)
     public Set<ProjectDao> getProjects() {
         return projects;

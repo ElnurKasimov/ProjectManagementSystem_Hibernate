@@ -243,6 +243,8 @@ public class ProjectService {
         String result = "";
         Optional<ProjectDto> projectFromDb = findByName(projectName);
         if (projectFromDb.isPresent()) {
+            //relationService.deleteProjectFromCompanyProjects(projectFromDb.get());
+            //relationService.deleteProjectFromCustomersProjects(projectFromDb.get());
             relationService.deleteAllDevelopersOfProject(projectFromDb.get());
             projectStorage.delete(ProjectConverter.to(projectFromDb.get()));
             result = "Project " + projectFromDb.get().getProjectName() + " successfully deleted from the database";
