@@ -10,13 +10,10 @@
     </head>
     <body>
         <c:import url="${contextPath}/WEB-INF/view/navigation.jsp"/>
-            <form action="/project/delete" method="post">
-                <label for="projectName">Project name:</label>
-                <input type="text" id="projectName" name="projectName"><br>
-                <button type="submit">Delete</button>
-            </form>
-         <c:forEach var = "line" items="${result}">
-             <c:out value="${line}"/><br>
-        </c:forEach>
+           <form action="/company/add" method ="post">
+               <label for="companyName"> Company name: </label>
+               <input type="text" id="companyName" name="companyName"><br>
+               <button type="submit">Save</button>
+           </form>
     </body>
 </html>

@@ -1,10 +1,12 @@
 package model.service;
 
+import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
 import model.dto.CompanyDto;
 import model.dto.CustomerDto;
 import model.dto.ProjectDto;
 import model.service.converter.ProjectConverter;
+import model.storage.CompanyStorage;
 import model.storage.DeveloperStorage;
 import model.storage.ProjectStorage;
 
@@ -31,10 +33,6 @@ public class ProjectService {
         this.companyService = companyService;
         this.customerService = customerService;
         this.relationService = relationService;
-    }
-
-    public boolean isExist(String projectName) {
-        return projectStorage.isExist(projectName);
     }
 
     public List<ProjectDto> findAllProjects() {
@@ -70,7 +68,7 @@ public class ProjectService {
         return projectStorage.getProjectIdsByDeveloperId(id);
     }
 
-    public List<ProjectDto>   getCompanyProjects(String companyName) {
+    public List<ProjectDto>  getCompanyProjects(String companyName) {
         List<ProjectDto> projects = new ArrayList<>();
         List<ProjectDao> projectDaoList = projectStorage.getCompanyProjects(companyName);
         for (ProjectDao projectDao : projectDaoList) {
@@ -193,30 +191,50 @@ public class ProjectService {
      return result;
     }
 
-    public String updateProject(String projectName, String customerName, int cost, String companyName, Date startSqlDate) {
+    public List<String> updateProject(String projectName, String customerName, int cost, String companyName, Date startSqlDate) {
         ProjectDto updatedProjectDto = null;
-        String result = "";
+        List<String> result = new ArrayList<>();
         Optional<ProjectDto> projectFromDb = findByName(projectName);
         if(projectFromDb.isPresent()) {
+            CompanyDto companyFromDb = projectFromDb.get().getCompany();
             updatedProjectDto = projectFromDb.get();
             Optional<CustomerDto> customerDto = customerService.findByName(customerName);
             if (customerDto.isPresent()) {
                 updatedProjectDto.setCustomer(customerDto.get());
                 Optional<CompanyDto> companyDto = companyService.findByName(companyName);
                 if (companyDto.isPresent()) {
-                    updatedProjectDto.setCompany(companyDto.get());
-                    updatedProjectDto.setCost(cost);
-                    updatedProjectDto.setStartDate(startSqlDate);
-                    projectStorage.update(ProjectConverter.to(updatedProjectDto));
-                    result = "Project " + updatedProjectDto.getProjectName() + " successfully updated.";
+                    if (companyDto.get().getCompanyName().equals(companyFromDb.getCompanyName())) {
+                        updatedProjectDto.setCompany(companyDto.get());
+                        updatedProjectDto.setCost(cost);
+                        updatedProjectDto.setStartDate(startSqlDate);
+                        projectStorage.update(ProjectConverter.to(updatedProjectDto));
+                        result.add("Project " + updatedProjectDto.getProjectName() + " successfully updated.");
+                    } else {
+                        Set<DeveloperDao> involvedInTheProject = projectStorage.findByName(projectName).get().getDevelopers();
+                        if (involvedInTheProject.isEmpty()) {
+                            updatedProjectDto.setCompany(companyDto.get());
+                            updatedProjectDto.setCost(cost);
+                            updatedProjectDto.setStartDate(startSqlDate);
+                            projectStorage.update(ProjectConverter.to(updatedProjectDto));
+                            result.add("Project " + updatedProjectDto.getProjectName() + " successfully updated.");
+                        } else {
+                            result.add("Please note that You've changed company from " + companyFromDb.getCompanyName() + " to " + companyName + ".");
+                            result.add("But " + companyFromDb.getCompanyName() + " employs the following developers who are involved it the project:");
+                            for (DeveloperDao developer : involvedInTheProject) {
+                                result.add(developer.getLastName() + " " + developer.getFirstName());
+                            }
+                            result.add("Before changing the company change the data of the relevant developers first.");
+                            result.add("Because developer can work in one company only.");
+                        }
+                    }
                 } else {
-                    result = "There is no company with such name. Please enter correct one.";
+                    result.add( "There is no company with such name. Please enter correct one.");
                 }
             } else {
-                result = "There is no customer with such name. Please enter correct one.";
+                result.add("There is no customer with such name. Please enter correct one.");
             }
         } else {
-            result = "There is no project with such name. Please enter correct one.";
+            result.add("There is no project with such name. Please enter correct one.");
         }
         return result;
     }
@@ -227,7 +245,6 @@ public class ProjectService {
         if (projectFromDb.isPresent()) {
             relationService.deleteAllDevelopersOfProject(projectFromDb.get());
             projectStorage.delete(ProjectConverter.to(projectFromDb.get()));
-
             result = "Project " + projectFromDb.get().getProjectName() + " successfully deleted from the database";
         } else {
             result = "There is no project with such name. Please enter correct one.";

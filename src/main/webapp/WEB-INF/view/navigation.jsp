@@ -31,6 +31,7 @@
       <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Companies<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="/company/list_all_companies">List of all companies</a></li>
+            <li><a href="/company/list_company_project">Projects of the companies</a></li>
             <li><a href="/company/add/form">Add a company</a></li>
             <li><a href="/company/update/form">Update a company</a></li>
             <li><a href="/company/delete/form">Delete a company</a></li>

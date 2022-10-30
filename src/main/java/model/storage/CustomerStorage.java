@@ -68,17 +68,6 @@ public class CustomerStorage implements Storage<CustomerDao> {
     }
 
     @Override
-    public boolean isExist(long id) {
-        return false;
-    }
-
-    @Override
-    public boolean isExist(String name) {
-        return false;
-    }
-
-
-    @Override
     public CustomerDao save(CustomerDao entity) {
         try (Session session = connectionProvider.openSession()) {
             Transaction transaction = session.beginTransaction();

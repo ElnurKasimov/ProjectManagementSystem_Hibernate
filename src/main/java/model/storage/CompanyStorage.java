@@ -68,16 +68,6 @@ public class CompanyStorage implements Storage<CompanyDao> {
     }
 
     @Override
-    public boolean isExist(long id) {
-        return false;
-    }
-
-    @Override
-    public boolean isExist(String name) {
-        return false;
-    }
-
-    @Override
     public CompanyDao save(CompanyDao entity) {
         try (Session session = connectionProvider.openSession()) {
             Transaction transaction = session.beginTransaction();

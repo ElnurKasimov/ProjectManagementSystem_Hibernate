@@ -53,7 +53,7 @@ public class ProjectInfo extends HttpServlet {
         String projectName = req.getParameter("projectName");
         String result = "";
         ProjectDto project = null;
-        if(projectService.isExist(projectName)) {
+        if(projectService.findByName(projectName).isPresent()) {
             result = "Database contains such information about project ";
             project = projectService.getInfoByName(projectName);
         } else {

@@ -57,7 +57,7 @@ public class ListProjectDevelopers extends HttpServlet {
         String projectName = req.getParameter("projectName");
         String result = "";
         List<String> projects = new ArrayList<>();
-        if(projectService.isExist(projectName)) {
+        if(projectService.findByName(projectName).isPresent()) {
             result = "Such developers develop the project '" + projectName + "' :";
             projects = developerService.getDevelopersNamesByProjectName(projectName);
         } else {
@@ -66,10 +66,6 @@ public class ListProjectDevelopers extends HttpServlet {
         req.setAttribute("projects", projects);
         req.setAttribute("result", result);
         req.getRequestDispatcher("/WEB-INF/view/project/listProjectDevelopers.jsp").forward(req, resp);
-
     }
-
-
-
 
 }

@@ -23,6 +23,8 @@
                 <input type="text" id="startDate" name="startDate"><br>
                 <button type="submit">Update</button>
             </form>
-        <c:out value="${result}"/>
+        <c:forEach var = "line" items="${result}">
+            <c:out value="${line}"/><br>
+       </c:forEach>
     </body>
 </html>

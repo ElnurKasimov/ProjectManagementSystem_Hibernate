@@ -57,10 +57,6 @@ public class DeveloperService {
         return developerStorage.getIdByName(lastName, firstName);
     }
 
-    public boolean isExist(String lastName, String firstName) {
-        return developerStorage.isExist(lastName, firstName);
-    }
-
     public List<String> getListNamesDevelopersWithCertainLanguage(String language) {
         List<String> result = new ArrayList<>();
         Set<DeveloperDao> developersFromDb = developerStorage.getDevelopersWithCertainLanguage(language);

@@ -25,30 +25,32 @@
     </head>
     <body>
         <c:import url="${contextPath}/WEB-INF/view/navigation.jsp"/>
+         <form action="/company/add" method ="post">
+             <label for="companyName"> Company name: </label>
+             <input type="text" id="companyName" name="companyName"><br>
+             <button type="submit">Save</button>
+         </form>
+
         <table>
              <thead>
-                 <c:if test="${not empty companies}">
+                 <c:if test="${not empty projects}">
                      <tr>
-                         <td>Company id</td>
-                         <td>Company name</td>
-                         <td>Rating</td>
+                         <td> Project id</td>
+                         <td>Project  name</td>
                      </tr>
                  </c:if>
-                 <c:if test="${empty companies}">
-                     <p>There is no any company  in the database</p>
+                 <c:if test="${empty projects}">
+                     <p>This company does not develop any project</p>
                  </c:if>
              </thead>
              <tbody>
-                 <c:forEach var = "company" items="${companies}">
+                 <c:forEach var = "project" items="${projects}">
                      <tr>
                          <td>
-                             <c:out value="${company.company_id}"/>
+                             <c:out value="${project.project_id}"/>
                          </td>
                          <td>
-                             <c:out value="${company.companyName}"/>
-                         </td>
-                         <td>
-                             <c:out value="${company.rating}"/>
+                             <c:out value="${project.projectName}"/>
                          </td>
                      </tr>
                  </c:forEach>

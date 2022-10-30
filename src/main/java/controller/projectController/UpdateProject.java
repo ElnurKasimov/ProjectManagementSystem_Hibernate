@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -55,7 +57,7 @@ public class UpdateProject extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String result = "";
+        List<String> result = new ArrayList<>();
         String projectName = req.getParameter("projectName");
         String customerName = req.getParameter("customerName");
         int cost = Integer.parseInt(req.getParameter("cost"));

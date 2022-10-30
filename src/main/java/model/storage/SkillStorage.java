@@ -67,11 +67,6 @@ public class SkillStorage implements Storage<SkillDao> {
     }
 
     @Override
-    public boolean isExist(String name) {
-        return false;
-    }
-
-    @Override
     public Optional<SkillDao> findById(long id) {
         return Optional.empty();
     }
@@ -131,19 +126,6 @@ public class SkillStorage implements Storage<SkillDao> {
     @Override
     public Set<SkillDao> findAll() {
         return null;
-    }
-
-    @Override
-    public boolean isExist(long id) {
-        return false;
-    }
-
-    public boolean isLanguageExist(String language) {
-        return countByLanguage(language) > 0;
-    }
-
-    public boolean isLevelExist(String language) {
-        return countByLevel(language) > 0;
     }
 
     @Override

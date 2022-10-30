@@ -122,20 +122,6 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
     }
 
     @Override
-    public boolean isExist(long id) {
-        return false;
-    }
-
-    public boolean isExist(String lastName, String firstName) {
-        return findByName(lastName, firstName).isPresent();
-    }
-
-    @Override
-    public boolean isExist(String name) {
-        return false;
-    }
-
-    @Override
     public DeveloperDao update(DeveloperDao entity) {
         DeveloperDao developerDao=null;
 //        try (Connection connection = manager.getConnection();
@@ -191,25 +177,6 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
         }
         return new HashSet<>();
     }
-    public List<String> getNamesListOfCertainLevelDevelopers(String level) {
-        List<String> developersNames = new ArrayList<>();
-//        try (Connection connection = manager.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(GET_LIST_LEVEL_DEVELOPERS)) {
-//            statement.setString(1, level);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                String lastName = rs.getString("lastname");
-//                String firstName = rs.getString("firstname");
-//                String language = rs.getString("language");
-//                developersNames.add(String.format("%s %s -  %s",
-//                        lastName, firstName, language));
-//            }
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return developersNames;
-    }
 
     public Set<DeveloperDao> getDevelopersByProjectName(String name) {
         try (Session session = connectionProvider.openSession()) {
@@ -228,9 +195,10 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
         try (Session session = connectionProvider.openSession()) {
             Transaction transaction = session.beginTransaction();
             quantity =  session.createQuery(
-                            "SELECT d FROM DeveloperDao d JOIN d.projects p WHERE p.projectName = :name", DeveloperDao.class)
+                            "SELECT COUNT(*) FROM DeveloperDao d JOIN d.projects p WHERE p.projectName = :name", Long.class)
                     .setParameter("name", name)
-                    .stream().count();
+                    .getSingleResult()
+            ;
         } catch (Exception exception) {
             exception.printStackTrace();
         }

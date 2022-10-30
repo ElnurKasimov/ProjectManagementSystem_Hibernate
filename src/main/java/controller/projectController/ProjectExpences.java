@@ -55,7 +55,7 @@ public class ProjectExpences extends HttpServlet {
         String projectName = req.getParameter("projectName");
         String result = "";
         long expenses = 0;
-        if(projectService.isExist(projectName)) {
+        if(projectService.findByName(projectName).isPresent()) {
             result = "Sum of salary all developers participate in the project  '" + projectName + "'  -  ";
             expenses = projectService.getProjectExpences(projectName);
         } else {
@@ -65,8 +65,5 @@ public class ProjectExpences extends HttpServlet {
         req.setAttribute("result", result);
         req.getRequestDispatcher("/WEB-INF/view/project/projectExpenses.jsp").forward(req, resp);
     }
-
-
-
 
 }

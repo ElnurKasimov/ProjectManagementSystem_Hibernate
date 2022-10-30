@@ -9,8 +9,6 @@ public interface Storage <T> {
     Optional<T> findById (long id);
     Optional<T>  findByName (String name);
     Set<T> findAll();
-    boolean isExist(long id);
-    boolean isExist(String name);
     T update (T entity);
     List<String>  delete(T entity);
 

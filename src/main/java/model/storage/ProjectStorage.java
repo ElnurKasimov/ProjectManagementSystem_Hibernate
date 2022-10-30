@@ -55,31 +55,6 @@ public class ProjectStorage implements Storage<ProjectDao> {
     }
 
     @Override
-    public ProjectDao save(ProjectDao entity) {
-//        try (Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)){
-//            statement.setString(1, entity.getProject_name());
-//            statement.setLong(2, entity.getCompanyDao().getCompany_id());
-//            statement.setLong(3, entity.getCustomerDao().getCustomer_id());
-//            statement.setInt(4, entity.getCost());
-//            statement.setDate(5,  entity.getStart_date());
-//            statement.executeUpdate();
-//            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-//                if (generatedKeys.next()) {
-//                    entity.setProject_id(generatedKeys.getInt(1));
-//                }
-//                else {
-//                    throw new SQLException("Project saving was interrupted, ID has not been obtained.");
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            throw new RuntimeException("The project was not created");
-//        }
-        return entity;
-    }
-
-    @Override
     public Optional<ProjectDao> findById(long id) {
 //        try(Connection connection = manager.getConnection();
 //            PreparedStatement statement = connection.prepareStatement(FIND_BY_ID)) {
@@ -120,30 +95,28 @@ public class ProjectStorage implements Storage<ProjectDao> {
     }
 
     @Override
-    public boolean isExist(long id) {
-        return false;
+    public ProjectDao save(ProjectDao entity) {
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return entity;
     }
 
     @Override
-    public boolean isExist(String name) {return findByName(name).isPresent();}
-
-    @Override
     public ProjectDao update(ProjectDao entity) {
-        ProjectDao projectDao = null;
-//        try (Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(UPDATE)) {
-//            statement.setLong(1, entity.getCompanyDao().getCompany_id());
-//            statement.setLong(2, entity.getCustomerDao().getCustomer_id());
-//            statement.setInt(3, entity.getCost());
-//            statement.setDate(4, entity.getStart_date());
-//            statement.setString(5, entity.getProject_name());
-//            ResultSet resultSet = statement.executeQuery();
-//            projectDao = mapProjectDao(resultSet);
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return projectDao;
+        ProjectDao updatedProjectDao = null;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            updatedProjectDao = session.merge(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return updatedProjectDao;
     }
 
     @Override
@@ -252,16 +225,17 @@ public class ProjectStorage implements Storage<ProjectDao> {
     }
 
     public long getProjectExpences(String name) {
+        long expences = 0;
         try (Session session = connectionProvider.openSession()) {
             Transaction transaction = session.beginTransaction();
-            return session.createQuery(
+            expences = session.createQuery(
                     "SELECT SUM(d.salary) FROM DeveloperDao d JOIN d.projects p WHERE p.projectName = :name",
-                    DeveloperDao.class).setParameter("name", name).getFirstResult();
+                    Long.class).setParameter("name", name).getSingleResult();
         }
         catch (Exception exception) {
             exception.printStackTrace();
         }
-        return 0;
+        return expences;
     }
 
 }
