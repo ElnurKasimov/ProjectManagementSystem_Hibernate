@@ -19,13 +19,13 @@
                 <input type="age" id="age" name="age"><br>
                 <p><b> Choose company where the developer works</b></p>
                  <c:forEach var = "company" items="${companies}">
-                    <input type="radio" name="companyName" value="${company.company_name}">${company.company_name}</input><br/>
+                    <input type="radio" name="companyName" value="${company.companyName}">${company.companyName}</input><br/>
                   </c:forEach><br>
                  <label for="salary">His salary:</label>
                  <input type="salary" id="salary" name="salary"><br>
                  <p><b> Choose project the developer participate</b></p>
                  <c:forEach var = "project" items="${projects}">
-                    <input type="checkbox" name="projectName" value="${project.project_name}">${project.project_name}</input><br/>
+                    <input type="checkbox" name="projectName" value="${project.projectName}">${project.projectName}</input><br/>
                  </c:forEach><br>
                  <label for="language">Language:</label>
                  <input type="text" id="language" name="language">

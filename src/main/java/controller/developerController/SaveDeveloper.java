@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = "/developer/save")
 public class SaveDeveloper extends HttpServlet {
@@ -60,23 +60,23 @@ public class SaveDeveloper extends HttpServlet {
         String lastName = req.getParameter("lastName");
         String firstName = req.getParameter("firstName");
         int age = Integer.parseInt(req.getParameter("age"));
-        String companyName = req.getParameter("companyName");
         int salary = Integer.parseInt(req.getParameter("salary"));
-        result = developerService.saveDeveloper(lastName, firstName, age, companyName, salary);
-        if( result.equals("")) {
-            Set<ProjectDto> projects = companyService.getCompanyProjects(companyName);
-            req.setAttribute("projects", projects);
-            req.setAttribute("lastName", lastName);
-            req.setAttribute("firstName", firstName);
-            req.setAttribute("age", age);
-            req.setAttribute("salary", salary);
-            req.setAttribute("companyName", companyName);
-            req.getRequestDispatcher("/WEB-INF/view/developer/addDeveloperToDbForm.jsp").forward(req, resp);
-        } else {
-            req.setAttribute("result", result);
-            req.getRequestDispatcher("/WEB-INF/view/developer/saveDeveloper.jsp").forward(req, resp);
+        String companyName = req.getParameter("companyName");
+        String[] projectsNames = req.getParameterValues("projectName");
+        Set<ProjectDto> developerProjects = new HashSet<>();
+        if (projectsNames != null) {
+            developerProjects = Arrays.stream(projectsNames)
+                    .map(name -> projectService.findByName(name).get())
+                    .collect(Collectors.toSet());
         }
-
+        String language = req.getParameter("language");
+        String level = req.getParameter("level");
+        result = developerService.saveDeveloper(lastName, firstName, age, salary, companyName,
+                developerProjects, language, level);
+        req.setAttribute("result", result);
+        HashMap<String, Set<ProjectDto>> fullCompanies = companyService.findAllCompaniesForMenu();
+        req.setAttribute("fullCompanies", fullCompanies);
+        req.getRequestDispatcher("/WEB-INF/view/developer/saveDeveloper.jsp").forward(req, resp);
     }
 
 }

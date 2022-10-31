@@ -89,4 +89,14 @@ public  CompanyService (CompanyStorage companyStorage) {
         return companyDaoFromDb.map(companyDao -> companyDao.getDevelopers().stream().map(DeveloperConverter::from).collect(Collectors.toSet()))
                 .orElseGet(HashSet::new);
     }
+
+    public HashMap<String, Set<ProjectDto>>  findAllCompaniesForMenu() {
+        HashMap<String, Set<ProjectDto>> fullCompanies = new HashMap<>();
+        Set<CompanyDao> companiesFromDb = companyStorage.findAll();
+        for (CompanyDao company : companiesFromDb) {
+            fullCompanies.put(company.getCompanyName(), company.getProjects().stream().map(ProjectConverter::from).collect(Collectors.toSet()));
+        }
+        return fullCompanies;
+    }
+
 }
