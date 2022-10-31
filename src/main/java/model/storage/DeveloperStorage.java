@@ -50,38 +50,22 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
 
     @Override
     public DeveloperDao save(DeveloperDao entity) {
-//        try (Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)){
-//            statement.setString(1, entity.getLastName());
-//            statement.setString(2, entity.getFirstName());
-//            statement.setInt(3, entity.getAge());
-//            statement.setLong(4, entity.getCompanyDao().getCompany_id());
-//            statement.setInt(5, entity.getSalary());
-//            statement.executeUpdate();
-//            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-//                if (generatedKeys.next()) {
-//                    entity.setDeveloper_id(generatedKeys.getInt(1));
-//                }
-//                else {
-//                    throw new SQLException("Developer saving was interrupted, ID has not been obtained.");
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            throw new RuntimeException("The developer was not created");
-//        }
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         return entity;
     }
 
     @Override
-    public Optional<DeveloperDao> findById(long id) {
-        return null;
+    public Optional<DeveloperDao> findById(long id) {return null;
     }
 
    @Override
-   public Optional<DeveloperDao> findByName(String name) {
-       return null;
-   }
+   public Optional<DeveloperDao> findByName(String name) {return null;}
 
     public Optional<DeveloperDao> findByName(String lastName, String firstName) {
         try (Session session = connectionProvider.openSession()) {

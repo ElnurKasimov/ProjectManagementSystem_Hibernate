@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProjectStorage implements Storage<ProjectDao> {
 
@@ -123,19 +124,13 @@ public class ProjectStorage implements Storage<ProjectDao> {
     }
 
     public List<Long> getProjectIdsByDeveloperId (long id) {
-        List<Long> projectIds = new ArrayList<>();
-//        try (Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(GET_PROJECTS_IDS_BY_DEVELOPER_ID)) {
-//            statement.setLong(1, id);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                projectIds.add(rs.getLong("project_id"));
-//            }
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return projectIds;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.get(DeveloperDao.class, id).getProjects().stream().map(ProjectDao::getProject_id).collect(Collectors.toList());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     public long getProjectExpences(String name) {

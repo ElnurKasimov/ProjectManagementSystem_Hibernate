@@ -16,8 +16,8 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@WebServlet(urlPatterns = "/developer/add_developer_relations")
-public class AddDeveloperRelations extends HttpServlet {
+@WebServlet(urlPatterns = "/developer/add_developer_to_db")
+public class AddDeveloperToDb extends HttpServlet {
     private static HibernateProvider connectionProvider;
     private static DeveloperStorage developerStorage;
     private static DeveloperService developerService;
@@ -59,6 +59,9 @@ public class AddDeveloperRelations extends HttpServlet {
         String result = "";
         String lastName = req.getParameter("lastName");
         String firstName = req.getParameter("firstName");
+        int age = Integer.parseInt(req.getParameter("age"));
+        int salary = Integer.parseInt(req.getParameter("salary"));
+        String companyName = req.getParameter("companyName");
         String[]  projectsNames = req.getParameterValues("projectName");
         Set<ProjectDto> developerProjects = Arrays.stream(projectsNames)
                 .map(name -> projectService.findByName(name))
@@ -66,10 +69,11 @@ public class AddDeveloperRelations extends HttpServlet {
                 .collect(Collectors.toSet());
         String language = req.getParameter("language");
         String level = req.getParameter("level");
-        DeveloperDto developerDto = developerService.getByName(lastName, firstName);
-        result = developerService.saveDeveloperRelations(developerDto, developerProjects, language, level);
+
+        result = developerService.saveDeveloper(lastName, firstName, age, salary, companyName,
+                developerProjects, language, level);
         req.setAttribute("result", result);
-        req.getRequestDispatcher("/WEB-INF/view/developer/addDeveloperRelations.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/view/developer/addDeveloperToDb.jsp").forward(req, resp);
 
     }
 

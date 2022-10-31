@@ -67,7 +67,7 @@ public class ProjectDao {
         return customer;
     }
 
-    @ManyToMany (mappedBy = "projects")
+    @ManyToMany (mappedBy = "projects", cascade = CascadeType.PERSIST)
     public Set<DeveloperDao> getDevelopers() {
         return developers;
     }

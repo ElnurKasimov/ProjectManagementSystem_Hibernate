@@ -1,6 +1,7 @@
 package model.storage;
 
 import controller.customerController.config.HibernateProvider;
+import model.dao.CompanyDao;
 import model.dao.SkillDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,7 +11,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SkillStorage implements Storage<SkillDao> {
-
     private static HibernateProvider connectionProvider;
 
     private final String INSERT = "INSERT INTO skill(language, level) VALUES (?, ?)";
@@ -29,23 +29,13 @@ public class SkillStorage implements Storage<SkillDao> {
 
     @Override
     public SkillDao save(SkillDao entity) {
-//        try (Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)){
-//            statement.setString(1, entity.getLanguage());
-//            statement.setString(2, entity.getLevel());
-//            statement.executeUpdate();
-//            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-//                if (generatedKeys.next()) {
-//                    entity.setSkill_id(generatedKeys.getInt(1));
-//                }
-//                else {
-//                    throw new SQLException("Skill saving was interrupted, ID has not been obtained.");
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            throw new RuntimeException("The skill was not created");
-//        }
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         return entity;
     }
 
@@ -76,19 +66,17 @@ public class SkillStorage implements Storage<SkillDao> {
     }
 
     public Optional<SkillDao> findByName(String language, String level) {
-//        try(Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)) {
-//            statement.setString(1, language);
-//            statement.setString(2, level);
-//            ResultSet resultSet = statement.executeQuery();
-//            SkillDao skillDao = mapSkillDao(resultSet);
-//            return Optional.ofNullable(skillDao);
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            return session.createQuery("FROM SkillDao s WHERE s.language LIKE :language AND s.level LIKE :level"
+                            , SkillDao.class)
+                    .setParameter("language", language).setParameter("level", level).uniqueResultOptional();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         return Optional.empty();
     }
+
     public long countByLanguage(String language) {
 //        try(Connection connection = manager.getConnection();
 //            PreparedStatement statement = connection.prepareStatement(COUNT_BY_LANGUAGE)) {
@@ -148,15 +136,6 @@ public class SkillStorage implements Storage<SkillDao> {
         }
         return skillDaoSet;
     }
-    private SkillDao mapSkillDao(ResultSet resultSet) throws SQLException {
-       SkillDao skillDao = null;
-//        while (resultSet.next()) {
-//            skillDao = new SkillDao();
-//            skillDao.setSkill_id(resultSet.getLong("skill_id"));
-//            skillDao.setLanguage(resultSet.getString("language"));
-//            skillDao.setLevel(resultSet.getString("level"));
-//        }
-        return skillDao;
-    }
+
 
 }

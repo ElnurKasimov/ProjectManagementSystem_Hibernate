@@ -1,6 +1,7 @@
 package controller.developerController;
 
 import controller.customerController.config.HibernateProvider;
+import model.dto.CompanyDto;
 import model.dto.ProjectDto;
 import model.service.*;
 import model.storage.*;
@@ -67,7 +68,10 @@ public class SaveDeveloper extends HttpServlet {
             req.setAttribute("projects", projects);
             req.setAttribute("lastName", lastName);
             req.setAttribute("firstName", firstName);
-            req.getRequestDispatcher("/WEB-INF/view/developer/addDeveloperRelationsForm.jsp").forward(req, resp);
+            req.setAttribute("age", age);
+            req.setAttribute("salary", salary);
+            req.setAttribute("companyName", companyName);
+            req.getRequestDispatcher("/WEB-INF/view/developer/addDeveloperToDbForm.jsp").forward(req, resp);
         } else {
             req.setAttribute("result", result);
             req.getRequestDispatcher("/WEB-INF/view/developer/saveDeveloper.jsp").forward(req, resp);

@@ -1,9 +1,12 @@
 package model.service;
 
 import model.dao.DeveloperDao;
+import model.dao.SkillDao;
 import model.dto.*;
 import model.service.converter.CompanyConverter;
 import model.service.converter.DeveloperConverter;
+import model.service.converter.ProjectConverter;
+import model.service.converter.SkillConverter;
 import model.storage.CompanyStorage;
 import model.storage.DeveloperStorage;
 import model.storage.ProjectStorage;
@@ -32,15 +35,6 @@ public class DeveloperService {
         this.companyStorage = companyStorage;
         this.relationService = relationService;
         this.skillService = skillService;
-    }
-
-    public String validateByName(DeveloperDto developerDto, DeveloperDto developerFromDb) {
-        if ((developerDto.getAge() == developerFromDb.getAge()) &&
-                (developerDto.getCompany().getCompanyName().equals(developerFromDb.getCompany().getCompanyName()))
-                && (developerDto.getSalary() == developerFromDb.getSalary())) {
-            return "";
-        } else return String.format("\tDeveloper  %s %s  already exists with different another data." +
-                " Please enter correct data", developerDto.getLastName(), developerDto.getFirstName());
     }
 
     public List<DeveloperDto> findAllDevelopers() {
@@ -87,9 +81,6 @@ public class DeveloperService {
                 "" : "There is no developer with such name in the database. Please, input correct data.";
     }
 
-
-
-
     public String saveDeveloper(String lastName, String firstName, int age, String companyName, int salary) {
         String result = "";
         CompanyDto companyDto = null;
@@ -104,7 +95,8 @@ public class DeveloperService {
             if (developerFromDb.isPresent()) {
                 result = validateByName(developerDtoToSave, DeveloperConverter.from(developerFromDb.get()));
             } else {
-                DeveloperDto savedDeveloperDto = DeveloperConverter.from(developerStorage.save(DeveloperConverter.to(developerDtoToSave)));
+               // DeveloperDto savedDeveloperDto = DeveloperConverter.from(developerStorage.save(DeveloperConverter.to(developerDtoToSave)));
+                //developerStorage.save(DeveloperConverter.to(developerDtoToSave));
             }
         } else {
             result = "There is no company with name '" + companyName + "' in the database. Please enter correct data.";
@@ -112,28 +104,34 @@ public class DeveloperService {
         return result;
     }
 
-    public String saveDeveloperRelations(DeveloperDto developerDto, Set<ProjectDto> developerProjects, String language, String level) {
-        List<Long> projectIdsByDeveloperIdFromDb = projectService.getProjectIdsByDeveloperId(developerDto.getDeveloper_id());
-        Set<ProjectDto> newDeveloperProjects = developerProjects.stream()
-                .filter(project -> !projectIdsByDeveloperIdFromDb.contains(project.getProject_id()))
-                .collect(Collectors.toSet());
-        if (!newDeveloperProjects.isEmpty()) {
-            relationService.saveProjectDeveloper(developerProjects, developerDto);
-        }
-
-        Set<SkillDto> developerSkills = new HashSet<>();
-        developerSkills.add(skillService.findByLanguageAndLevel(language, level));
-
-        List<Long> developerSkillIdsFromDb = skillService.getSkillIdsByDeveloperId(developerDto.getDeveloper_id());
-        Set<SkillDto> newDeveloperSkills = developerSkills.stream()
-                .filter(skill -> !developerSkillIdsFromDb.contains(skill.getSkillId()))
-                .collect(Collectors.toSet());
-        if (!newDeveloperSkills.isEmpty()) {
-            relationService.saveDeveloperSkill(developerDto, newDeveloperSkills);
-        }
-        return String.format("Developer %s %s successfully added into database with all necessary relations."
-                , developerDto.getLastName(), developerDto.getFirstName());
+    public String validateByName(DeveloperDto developerDto, DeveloperDto developerFromDb) {
+        if ((developerDto.getAge() == developerFromDb.getAge()) &&
+                (developerDto.getCompany().getCompanyName().equals(developerFromDb.getCompany().getCompanyName()))
+                && (developerDto.getSalary() == developerFromDb.getSalary())) {
+            return "";
+        } else return String.format("\tDeveloper  %s %s  already exists with different another data." +
+                " Please enter correct data", developerDto.getLastName(), developerDto.getFirstName());
     }
+
+    public String saveDeveloper(String lastName, String firstName,  int age, int salary, String companyName,
+                                Set<ProjectDto> developerProjects, String language, String level) {
+        DeveloperDao developerDaoToAdd = new DeveloperDao();
+        developerDaoToAdd.setLastName(lastName);
+        developerDaoToAdd.setFirstName(firstName);
+        developerDaoToAdd.setAge(age);
+        developerDaoToAdd.setSalary(salary);
+        developerDaoToAdd.setCompany(companyStorage.findByName(companyName).get());
+        developerDaoToAdd.setProjects(developerProjects.stream().map(ProjectConverter::to).collect(Collectors.toSet()));
+        SkillDto skillDto = skillService.findByLanguageAndLevel(language, level);
+        Set<SkillDto> skills = new HashSet<>();
+        skills.add(skillDto);
+        developerDaoToAdd.setSkills(skills.stream().map(SkillConverter::to).collect(Collectors.toSet()));
+        developerStorage.save(developerDaoToAdd);
+        return String.format("Developer %s %s successfully added into database with all necessary relations."
+            , lastName, firstName);
+    }
+
+
     public String updateDeveloper(DeveloperDto developerDtoToUpdate, String[] projectsNames, Set<SkillDto> skillsDto) {
 
         DeveloperDto updatedDeveloperDto = DeveloperConverter.from(developerStorage.update(DeveloperConverter.to(developerDtoToUpdate)));
