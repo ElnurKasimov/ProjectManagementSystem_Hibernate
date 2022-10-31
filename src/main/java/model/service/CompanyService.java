@@ -3,8 +3,10 @@ package model.service;
 import model.dao.CompanyDao;
 import model.dao.ProjectDao;
 import model.dto.CompanyDto;
+import model.dto.DeveloperDto;
 import model.dto.ProjectDto;
 import model.service.converter.CompanyConverter;
+import model.service.converter.DeveloperConverter;
 import model.service.converter.ProjectConverter;
 import model.storage.CompanyStorage;
 
@@ -82,4 +84,9 @@ public  CompanyService (CompanyStorage companyStorage) {
                 .orElseGet(HashSet::new);
     }
 
+    public Set<DeveloperDto> getCompanyDevelopers (String name) {
+        Optional<CompanyDao>  companyDaoFromDb = companyStorage.findByName(name);
+        return companyDaoFromDb.map(companyDao -> companyDao.getDevelopers().stream().map(DeveloperConverter::from).collect(Collectors.toSet()))
+                .orElseGet(HashSet::new);
+    }
 }

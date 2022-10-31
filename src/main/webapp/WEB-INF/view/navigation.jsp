@@ -32,6 +32,7 @@
           <ul class="dropdown-menu">
             <li><a href="/company/list_all_companies">List of all companies</a></li>
             <li><a href="/company/list_projects/form">Projects of the company</a></li>
+            <li><a href="/company/list_developers/form">Developers of the company</a></li>
             <li><a href="/company/add/form">Add a company</a></li>
             <li><a href="/company/update/form">Update a company</a></li>
             <li><a href="/company/delete/form">Delete a company</a></li>
