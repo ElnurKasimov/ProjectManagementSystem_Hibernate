@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 @WebServlet(urlPatterns = "/developer/save")
 public class SaveDeveloper extends HttpServlet {
@@ -44,8 +45,7 @@ public class SaveDeveloper extends HttpServlet {
             customerService = new CustomerService(customerStorage);
             developerStorage = new DeveloperStorage(connectionProvider, companyStorage, skillStorage);
             projectStorage = new ProjectStorage(connectionProvider, companyStorage, customerStorage);
-            projectService = new ProjectService(projectStorage, developerStorage, companyService,
-                    customerService, relationService);
+            projectService = new ProjectService(projectStorage, developerStorage, companyService, customerService);
             developerService = new DeveloperService(developerStorage, projectService, projectStorage,
                     skillStorage, companyStorage, relationService, skillService);
         } catch (SQLException e) {
@@ -63,7 +63,7 @@ public class SaveDeveloper extends HttpServlet {
         int salary = Integer.parseInt(req.getParameter("salary"));
         result = developerService.saveDeveloper(lastName, firstName, age, companyName, salary);
         if( result.equals("")) {
-            List<ProjectDto> projects = projectService.getCompanyProjects(companyName);
+            Set<ProjectDto> projects = companyService.getCompanyProjects(companyName);
             req.setAttribute("projects", projects);
             req.setAttribute("lastName", lastName);
             req.setAttribute("firstName", firstName);

@@ -24,23 +24,17 @@ import java.util.stream.Stream;
 public class ProjectService {
     private ProjectStorage projectStorage;
     private DeveloperStorage developerStorage;
-    private CompanyStorage companyStorage;
-    private CustomerStorage customerStorage;
     private CompanyService companyService;
     private CustomerService customerService;
-    private RelationService relationService;
+
 
     public ProjectService(ProjectStorage projectStorage, DeveloperStorage developerStorage,
-                          CompanyStorage companyStorage, CustomerStorage customerStorage,
-                          CompanyService companyService, CustomerService customerService,
-                          RelationService relationService) {
+
+                          CompanyService companyService, CustomerService customerService) {
         this.projectStorage = projectStorage;
         this.developerStorage = developerStorage;
-        this.companyStorage = companyStorage;
-        this.customerStorage = customerStorage;
         this.companyService = companyService;
         this.customerService = customerService;
-        this.relationService = relationService;
     }
 
     public List<ProjectDto> findAllProjects() {
@@ -247,9 +241,9 @@ public class ProjectService {
 
     public List<String> deleteProject(String projectName) {
         List<String> result = new ArrayList<>();
-        Optional<ProjectDto> projectFromDb = findByName(projectName);
+        Optional<ProjectDao> projectFromDb = projectStorage.findByName(projectName);
         if (projectFromDb.isPresent()) {
-            result = projectStorage.delete(ProjectConverter.to(projectFromDb.get()));
+            result = projectStorage.delete(projectFromDb.get());
         } else {
             result.add("There is no project with such name. Please enter correct one.");
         }

@@ -42,8 +42,7 @@ public class DeleteDeveloper extends HttpServlet {
             customerService = new CustomerService(customerStorage);
             developerStorage = new DeveloperStorage(connectionProvider, companyStorage, skillStorage);
             projectStorage = new ProjectStorage(connectionProvider, companyStorage, customerStorage);
-            projectService = new ProjectService(projectStorage, developerStorage, companyService,
-                    customerService, relationService);
+            projectService = new ProjectService(projectStorage, developerStorage, companyService, customerService);
             developerService = new DeveloperService(developerStorage, projectService, projectStorage,
                     skillStorage, companyStorage, relationService, skillService);
         } catch (SQLException e) {

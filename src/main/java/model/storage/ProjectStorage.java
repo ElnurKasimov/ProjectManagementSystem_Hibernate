@@ -186,20 +186,15 @@ public class ProjectStorage implements Storage<ProjectDao> {
             CompanyDao companyDao = companyStorage.findByName(companyName).get();
             Set<ProjectDao> companyProjects = companyDao.getProjects();
             companyProjects.remove(entity);
-            //companyDao.setProjects(companyProjects);
             session.merge(companyDao);
-
             String customerName = entity.getCustomer().getCustomerName();
             CustomerDao customerDao = customerStorage.findByName(customerName).get();
             Set<ProjectDao> customerProjects = customerDao.getProjects();
             customerProjects.remove(entity);
-            //customerDao.setProjects(customerProjects);
             session.merge(customerDao);
-
-            entity.getDevelopers().forEach(dev -> dev.getProjects().remove(entity));
-
+            session.clear();
             session.remove(entity);
-
+            entity.getDevelopers().forEach(dev -> dev.getProjects().remove(entity));
             transaction.commit();
             result.add("Project " + entity.getProjectName() + " successfully deleted from the database");
 

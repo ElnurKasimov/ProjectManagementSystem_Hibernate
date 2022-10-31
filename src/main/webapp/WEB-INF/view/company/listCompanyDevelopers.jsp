@@ -36,7 +36,7 @@
                      <thead>
                          <c:if test="${not empty developers}">
                              <tr>
-                                 <td> Project id</td>
+                                 <td>id</td>
                                  <td>Last name</td>
                                  <td>First name</td>
                              </tr>

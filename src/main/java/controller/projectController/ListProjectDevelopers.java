@@ -15,36 +15,36 @@ import java.util.*;
 
 @WebServlet(urlPatterns = "/project/list_project_developers")
 public class ListProjectDevelopers extends HttpServlet {
+    private static DeveloperService developerService;
     private static HibernateProvider connectionProvider;
     private static DeveloperStorage developerStorage;
-    private static DeveloperService developerService;
     private static CompanyStorage companyStorage;
     private static CompanyService companyService;
     private static CustomerStorage customerStorage;
     private static CustomerService customerService;
     private static ProjectStorage projectStorage;
     private static ProjectService projectService;
-    private static SkillService skillService;
     private static SkillStorage skillStorage;
+    private static SkillService skillService;
     private static RelationStorage relationStorage;
-    private static RelationService relationService;
+    private  static RelationService relationService;
+
 
     @Override
     public void init() throws ServletException {
         connectionProvider = new HibernateProvider();
         try {
-            skillStorage = new SkillStorage(connectionProvider);
-            skillService = new SkillService(skillStorage);
             relationStorage = new RelationStorage(connectionProvider);
             relationService = new RelationService(relationStorage);
+            skillStorage = new SkillStorage(connectionProvider);
+            skillService = new SkillService(skillStorage);
             companyStorage = new CompanyStorage(connectionProvider);
             companyService = new CompanyService(companyStorage);
             customerStorage = new CustomerStorage(connectionProvider);
             customerService = new CustomerService(customerStorage);
             developerStorage = new DeveloperStorage(connectionProvider, companyStorage, skillStorage);
             projectStorage = new ProjectStorage(connectionProvider, companyStorage, customerStorage);
-            projectService = new ProjectService(projectStorage, developerStorage, companyService,
-                    customerService, relationService);
+            projectService = new ProjectService(projectStorage, developerStorage, companyService, customerService);
             developerService = new DeveloperService(developerStorage, projectService, projectStorage,
                     skillStorage, companyStorage, relationService, skillService);
         } catch (SQLException e) {

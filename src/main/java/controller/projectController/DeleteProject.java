@@ -28,24 +28,19 @@ public class DeleteProject extends HttpServlet {
     private static ProjectStorage projectStorage;
     private static ProjectService projectService;
     private static SkillStorage skillStorage;
-    private static RelationStorage relationStorage;
-    private static RelationService relationService;
 
     @Override
     public void init() throws ServletException {
         connectionProvider = new HibernateProvider();
         try {
             skillStorage = new SkillStorage(connectionProvider);
-            relationStorage = new RelationStorage(connectionProvider);
-            relationService = new RelationService(relationStorage);
             companyStorage = new CompanyStorage(connectionProvider);
             companyService = new CompanyService(companyStorage);
             customerStorage = new CustomerStorage(connectionProvider);
             customerService = new CustomerService(customerStorage);
             developerStorage = new DeveloperStorage(connectionProvider, companyStorage, skillStorage);
             projectStorage = new ProjectStorage(connectionProvider, companyStorage, customerStorage);
-            projectService = new ProjectService(projectStorage, developerStorage, companyStorage,
-                    customerStorage, companyService, customerService, relationService);
+            projectService = new ProjectService(projectStorage, developerStorage, companyService, customerService);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,7 +53,6 @@ public class DeleteProject extends HttpServlet {
         result = projectService.deleteProject(projectName);
         req.setAttribute("result", result);
         req.getRequestDispatcher("/WEB-INF/view/project/deleteProject.jsp").forward(req, resp);
-
     }
 
 }
