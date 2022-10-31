@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(urlPatterns = "/project/delete")
 public class DeleteProject extends HttpServlet {
@@ -42,8 +44,8 @@ public class DeleteProject extends HttpServlet {
             customerService = new CustomerService(customerStorage);
             developerStorage = new DeveloperStorage(connectionProvider, companyStorage, skillStorage);
             projectStorage = new ProjectStorage(connectionProvider, companyStorage, customerStorage);
-            projectService = new ProjectService(projectStorage, developerStorage, companyService,
-                    customerService, relationService);
+            projectService = new ProjectService(projectStorage, developerStorage, companyStorage,
+                    customerStorage, companyService, customerService, relationService);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -51,7 +53,7 @@ public class DeleteProject extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String result = "";
+        List<String> result = new ArrayList<>();
         String projectName = req.getParameter("projectName");
         result = projectService.deleteProject(projectName);
         req.setAttribute("result", result);

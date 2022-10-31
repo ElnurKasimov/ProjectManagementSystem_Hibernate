@@ -1,5 +1,7 @@
 package model.service;
 
+import model.dao.CompanyDao;
+import model.dao.CustomerDao;
 import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
 import model.dto.CompanyDto;
@@ -7,6 +9,7 @@ import model.dto.CustomerDto;
 import model.dto.ProjectDto;
 import model.service.converter.ProjectConverter;
 import model.storage.CompanyStorage;
+import model.storage.CustomerStorage;
 import model.storage.DeveloperStorage;
 import model.storage.ProjectStorage;
 
@@ -21,38 +24,41 @@ import java.util.stream.Stream;
 public class ProjectService {
     private ProjectStorage projectStorage;
     private DeveloperStorage developerStorage;
+    private CompanyStorage companyStorage;
+    private CustomerStorage customerStorage;
     private CompanyService companyService;
     private CustomerService customerService;
     private RelationService relationService;
 
     public ProjectService(ProjectStorage projectStorage, DeveloperStorage developerStorage,
+                          CompanyStorage companyStorage, CustomerStorage customerStorage,
                           CompanyService companyService, CustomerService customerService,
                           RelationService relationService) {
         this.projectStorage = projectStorage;
         this.developerStorage = developerStorage;
+        this.companyStorage = companyStorage;
+        this.customerStorage = customerStorage;
         this.companyService = companyService;
         this.customerService = customerService;
         this.relationService = relationService;
     }
 
     public List<ProjectDto> findAllProjects() {
-         return projectStorage.findAll().stream()
-                 .map(ProjectConverter::from)
-                 .collect(Collectors.toList());
+        return projectStorage.findAll().stream()
+                .map(ProjectConverter::from)
+                .collect(Collectors.toList());
     }
 
     public Optional<ProjectDto> findByName(String name) {
-        if(projectStorage.findByName(name).isPresent()) {
+        if (projectStorage.findByName(name).isPresent()) {
             return Optional.of(ProjectConverter.from(projectStorage.findByName(name).get()));
-        }
-        else return Optional.empty();
+        } else return Optional.empty();
     }
 
     public Optional<ProjectDto> findById(Long id) {
-        if(projectStorage.findById(id).isPresent()) {
+        if (projectStorage.findById(id).isPresent()) {
             return Optional.of(ProjectConverter.from(projectStorage.findById(id).get()));
-        }
-        else return Optional.empty();
+        } else return Optional.empty();
     }
 
     public List<String> getProjectsNameByDeveloperId(long id) {
@@ -68,23 +74,23 @@ public class ProjectService {
         return projectStorage.getProjectIdsByDeveloperId(id);
     }
 
-    public List<ProjectDto>  getCompanyProjects(String companyName) {
-        List<ProjectDto> projects = new ArrayList<>();
-        List<ProjectDao> projectDaoList = projectStorage.getCompanyProjects(companyName);
-        for (ProjectDao projectDao : projectDaoList) {
-            projects.add(ProjectConverter.from(projectDao));
-        }
-        return projects;
-    }
-
-    public List<ProjectDto> getCustomerProjects(String customerName) {
-        List<ProjectDto> projects = new ArrayList<>();
-        List<ProjectDao> projectDaoList = projectStorage.getCustomerProjects(customerName);
-        for (ProjectDao projectDao : projectDaoList) {
-            projects.add(ProjectConverter.from(projectDao));
-        }
-        return projects;
-    }
+//    public List<ProjectDto> getCompanyProjects(String companyName) {
+//        List<ProjectDto> projects = new ArrayList<>();
+//        List<ProjectDao> projectDaoList = projectStorage.getCompanyProjects(companyName);
+//        for (ProjectDao projectDao : projectDaoList) {
+//            projects.add(ProjectConverter.from(projectDao));
+//        }
+//        return projects;
+//    }
+//
+//    public List<ProjectDto> getCustomerProjects(String customerName) {
+//        List<ProjectDto> projects = new ArrayList<>();
+//        List<ProjectDao> projectDaoList = projectStorage.getCustomerProjects(customerName);
+//        for (ProjectDao projectDao : projectDaoList) {
+//            projects.add(ProjectConverter.from(projectDao));
+//        }
+//        return projects;
+//    }
 
     public long getIdByName(String name) {
         return projectStorage.getIdByName(name).orElseGet(() -> {
@@ -170,12 +176,12 @@ public class ProjectService {
                 (dateFromProjectDto.equals(dateFromProjectFromDb));
     }
 
-    public  ProjectDto getInfoByName(String name) {
+    public ProjectDto getInfoByName(String name) {
         return ProjectConverter.from(projectStorage.findByName(name).get());
     }
 
     public long getProjectExpences(String projectName) {
-        return  projectStorage.getProjectExpences(projectName);
+        return projectStorage.getProjectExpences(projectName);
     }
 
     public List<String> getProjectsListInSpecialFormat() {
@@ -188,14 +194,14 @@ public class ProjectService {
                             developerStorage.getQuantityOfProjectDevelopers(projectDao.getProjectName())
                     )));
         }
-     return result;
+        return result;
     }
 
     public List<String> updateProject(String projectName, String customerName, int cost, String companyName, Date startSqlDate) {
         ProjectDto updatedProjectDto = null;
         List<String> result = new ArrayList<>();
         Optional<ProjectDto> projectFromDb = findByName(projectName);
-        if(projectFromDb.isPresent()) {
+        if (projectFromDb.isPresent()) {
             CompanyDto companyFromDb = projectFromDb.get().getCompany();
             updatedProjectDto = projectFromDb.get();
             Optional<CustomerDto> customerDto = customerService.findByName(customerName);
@@ -228,7 +234,7 @@ public class ProjectService {
                         }
                     }
                 } else {
-                    result.add( "There is no company with such name. Please enter correct one.");
+                    result.add("There is no company with such name. Please enter correct one.");
                 }
             } else {
                 result.add("There is no customer with such name. Please enter correct one.");
@@ -239,25 +245,22 @@ public class ProjectService {
         return result;
     }
 
-    public String deleteProject(String projectName) {
-        String result = "";
+    public List<String> deleteProject(String projectName) {
+        List<String> result = new ArrayList<>();
         Optional<ProjectDto> projectFromDb = findByName(projectName);
         if (projectFromDb.isPresent()) {
-            //relationService.deleteProjectFromCompanyProjects(projectFromDb.get());
-            //relationService.deleteProjectFromCustomersProjects(projectFromDb.get());
-            relationService.deleteAllDevelopersOfProject(projectFromDb.get());
-            projectStorage.delete(ProjectConverter.to(projectFromDb.get()));
-            result = "Project " + projectFromDb.get().getProjectName() + " successfully deleted from the database";
+            result = projectStorage.delete(ProjectConverter.to(projectFromDb.get()));
         } else {
-            result = "There is no project with such name. Please enter correct one.";
+            result.add("There is no project with such name. Please enter correct one.");
         }
         return result;
     }
 
-    public boolean checkProjects(String[] projectsNames, String  companyName) {
-        List<String >  companyProjectsNames = getCompanyProjects(companyName).stream()
-                .map(ProjectDto::getProjectName).collect(Collectors.toList());
-        return Stream.of(projectsNames).allMatch(companyProjectsNames::contains);
+    public boolean checkProjects(String[] projectsNames, String companyName) {
+        //List<String> companyProjectsNames = getCompanyProjects(companyName).stream()
+        //        .map(ProjectDto::getProjectName).collect(Collectors.toList());
+        //return Stream.of(projectsNames).allMatch(companyProjectsNames::contains);
+        return true;
     }
 
 }

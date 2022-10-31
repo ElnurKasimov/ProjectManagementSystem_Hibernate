@@ -1,6 +1,9 @@
 package model.storage;
 
 import controller.customerController.config.HibernateProvider;
+import model.dao.CompanyDao;
+import model.dao.CustomerDao;
+import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -88,91 +91,8 @@ public class ProjectStorage implements Storage<ProjectDao> {
         return new HashSet<>();
     }
 
-    @Override
-    public ProjectDao save(ProjectDao entity) {
-        try (Session session = connectionProvider.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.persist(entity);
-            transaction.commit();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return entity;
-    }
 
-    @Override
-    public ProjectDao update(ProjectDao entity) {
-        ProjectDao updatedProjectDao = null;
-        try (Session session = connectionProvider.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            updatedProjectDao = session.merge(entity);
-            transaction.commit();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return updatedProjectDao;
-    }
 
-    @Override
-    public List<String>  delete(ProjectDao entity) {
-//        try (Connection connection = manager.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(DELETE)) {
-//            statement.setString(1, entity.getProject_name());
-//            statement.executeUpdate();
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return null;
-    }
-
-    public List<ProjectDao> getCompanyProjects (String companyName) {
-        List<ProjectDao> companyProjectList = new ArrayList<>();
-//        try (Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(GET_COMPANY_PROJECTS)) {
-//            statement.setString(1, companyName);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                ProjectDao projectDao = new ProjectDao();
-//                projectDao.setProject_id(rs.getLong("project_id"));
-//                projectDao.setProject_name(rs.getString("project_name"));
-//                projectDao.setCompanyDao(companyStorage.findById(rs.getLong("company_id")).get());
-//                projectDao.setCustomerDao(customerStorage.findById(rs.getLong("customer_id")).get());
-//                projectDao.setCost(rs.getInt("cost"));
-//                projectDao.setStart_date(Date.valueOf(LocalDate.parse(rs.getString("start_date"),
-//                        DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-//                companyProjectList.add(projectDao);
-//            }
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return companyProjectList;
-    }
-
-    public List<ProjectDao> getCustomerProjects (String customerName) {
-        List<ProjectDao> customerProjectList = new ArrayList<>();
-//        try (Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(GET_CUSTOMER_PROJECTS)) {
-//            statement.setString(1, customerName);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                ProjectDao projectDao = new ProjectDao();
-//                projectDao.setProject_id(rs.getLong("project_id"));
-//                projectDao.setProject_name(rs.getString("project_name"));
-//                projectDao.setCompanyDao(companyStorage.findById(rs.getLong("company_id")).get());
-//                projectDao.setCustomerDao(customerStorage.findById(rs.getLong("customer_id")).get());
-//                projectDao.setCost(rs.getInt("cost"));
-//                projectDao.setStart_date(Date.valueOf(LocalDate.parse(rs.getString("start_date"),
-//                        DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-//                customerProjectList.add(projectDao);
-//            }
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return customerProjectList;
-    }
     public Optional<Long> getIdByName (String name) {
         Optional<Long> id = Optional.empty();
 //        try (Connection connection = manager.getConnection();
@@ -230,6 +150,63 @@ public class ProjectStorage implements Storage<ProjectDao> {
             exception.printStackTrace();
         }
         return expences;
+    }
+
+    @Override
+    public ProjectDao save(ProjectDao entity) {
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return entity;
+    }
+
+    @Override
+    public ProjectDao update(ProjectDao entity) {
+        ProjectDao updatedProjectDao = null;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            updatedProjectDao = session.merge(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return updatedProjectDao;
+    }
+
+    @Override
+    public List<String>  delete(ProjectDao entity) {
+        List<String> result = new ArrayList<>();
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            String companyName = entity.getCompany().getCompanyName();
+            CompanyDao companyDao = companyStorage.findByName(companyName).get();
+            Set<ProjectDao> companyProjects = companyDao.getProjects();
+            companyProjects.remove(entity);
+            //companyDao.setProjects(companyProjects);
+            session.merge(companyDao);
+
+            String customerName = entity.getCustomer().getCustomerName();
+            CustomerDao customerDao = customerStorage.findByName(customerName).get();
+            Set<ProjectDao> customerProjects = customerDao.getProjects();
+            customerProjects.remove(entity);
+            //customerDao.setProjects(customerProjects);
+            session.merge(customerDao);
+
+            entity.getDevelopers().forEach(dev -> dev.getProjects().remove(entity));
+
+            session.remove(entity);
+
+            transaction.commit();
+            result.add("Project " + entity.getProjectName() + " successfully deleted from the database");
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return result;
     }
 
 }

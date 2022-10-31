@@ -43,8 +43,8 @@ public class ListOfAllProjects extends HttpServlet {
             customerService = new CustomerService(customerStorage);
             developerStorage = new DeveloperStorage(connectionProvider, companyStorage, skillStorage);
             projectStorage = new ProjectStorage(connectionProvider, companyStorage, customerStorage);
-            projectService = new ProjectService(projectStorage, developerStorage, companyService,
-                    customerService, relationService);
+            projectService = new ProjectService(projectStorage, developerStorage, companyStorage,
+                    customerStorage, companyService, customerService, relationService);
         } catch (SQLException e) {
             e.printStackTrace();
         }
