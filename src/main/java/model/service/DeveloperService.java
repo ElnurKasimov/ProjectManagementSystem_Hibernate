@@ -112,20 +112,37 @@ public class DeveloperService {
                 "" : "There is no developer with such name in the database. Please, input correct data.";
     }
 
-    public String updateDeveloper(DeveloperDto developerDtoToUpdate, String[] projectsNames, Set<SkillDto> skillsDto) {
+    public String updateDeveloper(String lastName, String firstName,  int age, int salary, String companyName,
+                                  Set<ProjectDto> developerProjects, String language, String level) {
+        String result = "";
+        DeveloperDao developerToUpdate = new DeveloperDao();
+        developerToUpdate.setLastName(lastName);
+        developerToUpdate.setFirstName(firstName);
+        developerToUpdate.setAge(age);
+        developerToUpdate.setSalary(salary);
+        developerToUpdate.setCompany(companyStorage.findByName(companyName).get());
+        if(developerProjects.isEmpty()) {developerToUpdate.setProjects(new HashSet<>());}
+        else {developerToUpdate.setProjects(developerProjects.stream().map(ProjectConverter::to).collect(Collectors.toSet()));}
+        SkillDto skillDto = skillService.findByLanguageAndLevel(language, level);
+        Set<SkillDto> skills = new HashSet<>();
+        skills.add(skillDto);
+        developerToUpdate.setSkills(skills.stream().map(SkillConverter::to).collect(Collectors.toSet()));
 
-        DeveloperDto updatedDeveloperDto = DeveloperConverter.from(developerStorage.update(DeveloperConverter.to(developerDtoToUpdate)));
-        Set<ProjectDto> projects = Stream.of(projectsNames)
-                .map(name -> projectService.findByName(name).get())
-                .collect(Collectors.toSet());
-        relationService.deleteAllProjectsOfDeveloper(updatedDeveloperDto);
-        relationService.saveProjectDeveloper(projects, updatedDeveloperDto);
+        DeveloperDao updatedDeveloper = developerStorage.update(developerToUpdate);
 
-        relationService.deleteAllSkillsOfDeveloper(updatedDeveloperDto);
-        relationService.saveDeveloperSkill(updatedDeveloperDto, skillsDto);
+
+//        Set<ProjectDto> projects = Stream.of(projectsNames)
+//                .map(name -> projectService.findByName(name).get())
+//                .collect(Collectors.toSet());
+//
+//        relationService.deleteAllProjectsOfDeveloper(updatedDeveloperDto);
+//        relationService.saveProjectDeveloper(projects, updatedDeveloperDto);
+//
+//        relationService.deleteAllSkillsOfDeveloper(updatedDeveloperDto);
+//        relationService.saveDeveloperSkill(updatedDeveloperDto, skillsDto);
 
         return String.format("Developer %s %s successfully updated with all necessary relations.",
-                updatedDeveloperDto.getLastName(), updatedDeveloperDto.getFirstName());
+                lastName, firstName);
     }
 
     public String deleteDeveloper(String lastName, String firstName) {

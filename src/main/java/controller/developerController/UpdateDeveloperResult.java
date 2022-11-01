@@ -2,6 +2,8 @@ package controller.developerController;
 
 import controller.customerController.config.HibernateProvider;
 import model.dto.DeveloperDto;
+import model.dto.ProjectDto;
+import model.dto.SkillDto;
 import model.service.*;
 import model.storage.*;
 
@@ -12,11 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@WebServlet(urlPatterns = "/developer/developer_info")
-public class DeveloperInfo extends HttpServlet {
+@WebServlet(urlPatterns = "/developer/update")
+public class UpdateDeveloperResult extends HttpServlet {
     private static HibernateProvider connectionProvider;
     private static DeveloperStorage developerStorage;
     private static DeveloperService developerService;
@@ -54,23 +58,28 @@ public class DeveloperInfo extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String result = "";
         String lastName = req.getParameter("lastName");
         String firstName = req.getParameter("firstName");
-        List<String> projects = new ArrayList<>();
-        List<String> skills = new ArrayList<>();
-        boolean isPresent = false;
-        DeveloperDto developerDto = developerService.getByName(lastName, firstName);
-        if (developerDto != null) {
-            isPresent = true;
-            projects = projectService.getProjectsNameByDeveloperId(developerDto.getDeveloper_id());
-            skills =  skillService.getSkillSetByDeveloperId(developerDto.getDeveloper_id());
+        int age = Integer.parseInt(req.getParameter("age"));
+        int salary = Integer.parseInt(req.getParameter("salary"));
+        String companyName = req.getParameter("companyName");
+        String[] projectsNames = req.getParameterValues("projectName");
+        Set<ProjectDto> developerProjects = new HashSet<>();
+        if (projectsNames != null) {
+            developerProjects = Arrays.stream(projectsNames)
+                    .map(name -> projectService.findByName(name).get())
+                    .collect(Collectors.toSet());
         }
-        req.setAttribute("isPresent", isPresent);
-        req.setAttribute("developer", developerDto);
-        req.setAttribute("projects", projects);
-        req.setAttribute("skills", skills);
-        req.getRequestDispatcher("/WEB-INF/view/developer/developerInfo.jsp").forward(req, resp);
+        String language = req.getParameter("language");
+        String level = req.getParameter("level");
+        result = developerService.updateDeveloper(lastName, firstName, age, salary, companyName,
+             developerProjects, language, level);
+
+        req.setAttribute("result", result);
+        req.getRequestDispatcher("/WEB-INF/view/developer/updateDeveloperResult.jsp").forward(req, resp);
+
     }
 
 }

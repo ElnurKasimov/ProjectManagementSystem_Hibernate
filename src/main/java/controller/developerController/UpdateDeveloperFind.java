@@ -1,6 +1,7 @@
 package controller.developerController;
 
 import controller.customerController.config.HibernateProvider;
+import model.dto.ProjectDto;
 import model.service.*;
 import model.storage.*;
 
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Set;
 
 @WebServlet(urlPatterns = "/developer/update_find")
 public class UpdateDeveloperFind extends HttpServlet {
@@ -59,8 +62,8 @@ public class UpdateDeveloperFind extends HttpServlet {
         if( result.equals("")) {
             req.setAttribute("lastName", lastName);
             req.setAttribute("firstName", firstName);
-            req.setAttribute("companies", companyService.findAllCompanies());
-            req.setAttribute("projects", projectService.findAllProjects());
+            HashMap<String, Set<ProjectDto>> fullCompanies = companyService.findAllCompaniesForMenu();
+            req.setAttribute("fullCompanies", fullCompanies);
             req.getRequestDispatcher("/WEB-INF/view/developer/updateDeveloperForm.jsp").forward(req, resp);
         } else {
             req.setAttribute("result", result);

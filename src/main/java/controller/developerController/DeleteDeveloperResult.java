@@ -1,8 +1,6 @@
 package controller.developerController;
 
 import controller.customerController.config.HibernateProvider;
-import model.dto.CompanyDto;
-import model.dto.ProjectDto;
 import model.service.*;
 import model.storage.*;
 
@@ -13,11 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Collectors;
 
-@WebServlet(urlPatterns = "/developer/save")
-public class SaveDeveloper extends HttpServlet {
+@WebServlet(urlPatterns = "/developer/delete")
+public class DeleteDeveloperResult extends HttpServlet {
     private static HibernateProvider connectionProvider;
     private static DeveloperStorage developerStorage;
     private static DeveloperService developerService;
@@ -59,24 +55,10 @@ public class SaveDeveloper extends HttpServlet {
         String result = "";
         String lastName = req.getParameter("lastName");
         String firstName = req.getParameter("firstName");
-        int age = Integer.parseInt(req.getParameter("age"));
-        int salary = Integer.parseInt(req.getParameter("salary"));
-        String companyName = req.getParameter("companyName");
-        String[] projectsNames = req.getParameterValues("projectName");
-        Set<ProjectDto> developerProjects = new HashSet<>();
-        if (projectsNames != null) {
-            developerProjects = Arrays.stream(projectsNames)
-                    .map(name -> projectService.findByName(name).get())
-                    .collect(Collectors.toSet());
-        }
-        String language = req.getParameter("language");
-        String level = req.getParameter("level");
-        result = developerService.saveDeveloper(lastName, firstName, age, salary, companyName,
-                developerProjects, language, level);
+        result = developerService.deleteDeveloper(lastName, firstName);
         req.setAttribute("result", result);
-        HashMap<String, Set<ProjectDto>> fullCompanies = companyService.findAllCompaniesForMenu();
-        req.setAttribute("fullCompanies", fullCompanies);
-        req.getRequestDispatcher("/WEB-INF/view/developer/saveDeveloper.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/view/developer/deleteDeveloper.jsp").forward(req, resp);
+
     }
 
 }

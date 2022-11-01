@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = "/developer/delete/form")
-public class deleteDeveloperForm extends HttpServlet {
+public class DeleteDeveloperForm extends HttpServlet {
     private static HibernateProvider connectionProvider;
 
     @Override

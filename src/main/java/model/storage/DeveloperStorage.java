@@ -106,21 +106,15 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
 
     @Override
     public DeveloperDao update(DeveloperDao entity) {
-        DeveloperDao developerDao=null;
-//        try (Connection connection = manager.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(UPDATE)) {
-//            statement.setInt(1, entity.getAge());
-//            statement.setInt(2, entity.getSalary());
-//            statement.setLong(3, entity.getCompanyDao().getCompany_id());
-//            statement.setString(4, entity.getLastName());
-//            statement.setString(5, entity.getFirstName());
-//            ResultSet resultSet = statement.executeQuery();
-//            developerDao = mapDeveloperDao(resultSet);
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return developerDao;
+        DeveloperDao updatedDeveloper=null;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            updatedDeveloper = session.merge(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return updatedDeveloper;
     }
 
     @Override

@@ -2,7 +2,6 @@ package controller.developerController;
 
 import controller.customerController.config.HibernateProvider;
 import model.dto.DeveloperDto;
-import model.dto.SkillDto;
 import model.service.*;
 import model.storage.*;
 
@@ -13,11 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-@WebServlet(urlPatterns = "/developer/update")
-public class UpdateDeveloper extends HttpServlet {
+@WebServlet(urlPatterns = "/developer/developer_info")
+public class DeveloperInfoResult extends HttpServlet {
     private static HibernateProvider connectionProvider;
     private static DeveloperStorage developerStorage;
     private static DeveloperService developerService;
@@ -55,26 +54,23 @@ public class UpdateDeveloper extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String result = "";
-        String companyName = req.getParameter("companyName");
-        DeveloperDto developerDtoToUpdate = new DeveloperDto();
-        developerDtoToUpdate.setLastName(req.getParameter("lastName"));
-        developerDtoToUpdate.setFirstName(req.getParameter("firstName"));
-        developerDtoToUpdate.setAge(Integer.parseInt(req.getParameter("age")));
-        developerDtoToUpdate.setSalary(Integer.parseInt(req.getParameter("salary")));
-        developerDtoToUpdate.setCompany(companyService.findByName(companyName).get());
-        String[]  projectsNames = req.getParameterValues("projectName");
-        if(projectService.checkProjects(projectsNames, companyName)) {
-            Set<SkillDto> skillsDto = new HashSet<>();
-            SkillDto skillDto = skillService.findByLanguageAndLevel(
-                   req.getParameter("language"), req.getParameter("level"));
-            skillsDto.add(skillDto);
-           result = developerService.updateDeveloper(developerDtoToUpdate,  projectsNames, skillsDto);
-       } else { result = "The projects you have chosen do not match the company you have chosen. Enter the correct data.";}
-        req.setAttribute("result", result);
-        req.getRequestDispatcher("/WEB-INF/view/developer/updateDeveloperResult.jsp").forward(req, resp);
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String lastName = req.getParameter("lastName");
+        String firstName = req.getParameter("firstName");
+        List<String> projects = new ArrayList<>();
+        List<String> skills = new ArrayList<>();
+        boolean isPresent = false;
+        DeveloperDto developerDto = developerService.getByName(lastName, firstName);
+        if (developerDto != null) {
+            isPresent = true;
+            projects = projectService.getProjectsNameByDeveloperId(developerDto.getDeveloper_id());
+            skills =  skillService.getSkillSetByDeveloperId(developerDto.getDeveloper_id());
+        }
+        req.setAttribute("isPresent", isPresent);
+        req.setAttribute("developer", developerDto);
+        req.setAttribute("projects", projects);
+        req.setAttribute("skills", skills);
+        req.getRequestDispatcher("/WEB-INF/view/developer/developerInfo.jsp").forward(req, resp);
     }
 
 }
