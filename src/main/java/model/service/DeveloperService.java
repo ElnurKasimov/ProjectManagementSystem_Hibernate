@@ -115,9 +115,7 @@ public class DeveloperService {
     public String updateDeveloper(String lastName, String firstName,  int age, int salary, String companyName,
                                   Set<ProjectDto> developerProjects, String language, String level) {
         String result = "";
-        DeveloperDao developerToUpdate = new DeveloperDao();
-        developerToUpdate.setLastName(lastName);
-        developerToUpdate.setFirstName(firstName);
+        DeveloperDao developerToUpdate = developerStorage.findByName(lastName, firstName).get();
         developerToUpdate.setAge(age);
         developerToUpdate.setSalary(salary);
         developerToUpdate.setCompany(companyStorage.findByName(companyName).get());

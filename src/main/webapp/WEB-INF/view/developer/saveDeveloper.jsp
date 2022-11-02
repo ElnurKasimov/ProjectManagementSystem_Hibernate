@@ -19,7 +19,7 @@
                 <input type="age" id="age" name="age"><br>
                 <label for="salary">Salary:</label>
                 <input type="salary" id="salary" name="salary"><br>
-                <p>Choose company in which developer works and projects where he participates.</p>
+                <p>Choose company in which developer works and projects (of this company) where he participates.</p>
                 <p>Take into account that some companies can be without projects</p>
                  <c:forEach var="entry" items="${fullCompanies}">
                     <div>
