@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(urlPatterns = "/developer/delete")
 public class DeleteDeveloperResult extends HttpServlet {
@@ -52,7 +54,7 @@ public class DeleteDeveloperResult extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String result = "";
+        List<String> result = new ArrayList<>();
         String lastName = req.getParameter("lastName");
         String firstName = req.getParameter("firstName");
         result = developerService.deleteDeveloper(lastName, firstName);

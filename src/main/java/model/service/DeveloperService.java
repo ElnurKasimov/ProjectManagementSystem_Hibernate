@@ -143,18 +143,17 @@ public class DeveloperService {
                 lastName, firstName);
     }
 
-    public String deleteDeveloper(String lastName, String firstName) {
-        String result = "";
+    public List<String> deleteDeveloper(String lastName, String firstName) {
+        List<String> result = new ArrayList<>();
         Optional<DeveloperDao> developerDaoFromDb = developerStorage.findByName(lastName, firstName);
         if (developerDaoFromDb.isPresent()) {
-            DeveloperDto developerDtoToDelete = DeveloperConverter.from(developerDaoFromDb.get());
-            relationService.deleteDeveloperFromDeveloperSkill(developerDtoToDelete);
-            relationService.deleteDeveloperFromProjectDeveloper(developerDtoToDelete);
-            developerStorage.delete(DeveloperConverter.to(developerDtoToDelete));
-            result = String.format("Developer %s %s successfully deleted from the database with all necessary relations.",
-                    developerDtoToDelete.getLastName(), developerDtoToDelete.getFirstName());
+
+//            relationService.deleteDeveloperFromDeveloperSkill(developerDtoToDelete);
+//            relationService.deleteDeveloperFromProjectDeveloper(developerDtoToDelete);
+//            relationService.deleteDeveloperFromCompany(developerDtoToDelete);
+            result = developerStorage.delete(developerDaoFromDb.get());
         } else {
-            result = "There is no such developer in the database. Please enter correct data";
+            result.add("There is no such developer in the database. Please enter correct data");
         }
         return result;
     }

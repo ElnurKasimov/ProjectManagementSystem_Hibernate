@@ -17,6 +17,8 @@
                 <input type="text" id="firstName" name="firstName"><br>
                 <button type="submit">Delete</button>
             </form>
-        <c:out value="${result}"/>
+        <c:forEach var = "line" items="${result}">
+             <c:out value="${line}"/><br>
+        </c:forEach>
     </body>
 </html>

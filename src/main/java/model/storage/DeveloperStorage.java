@@ -1,6 +1,8 @@
 package model.storage;
 
 import controller.customerController.config.HibernateProvider;
+import model.dao.CompanyDao;
+import model.dao.CustomerDao;
 import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
 import org.hibernate.Session;
@@ -48,17 +50,7 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
 
     }
 
-    @Override
-    public DeveloperDao save(DeveloperDao entity) {
-        try (Session session = connectionProvider.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.persist(entity);
-            transaction.commit();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return entity;
-    }
+
 
     @Override
     public Optional<DeveloperDao> findById(long id) {return null;
@@ -102,33 +94,6 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
             exception.printStackTrace();
         }
         return new HashSet<>();
-    }
-
-    @Override
-    public DeveloperDao update(DeveloperDao entity) {
-        DeveloperDao updatedDeveloper=null;
-        try (Session session = connectionProvider.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            updatedDeveloper = session.merge(entity);
-            transaction.commit();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return updatedDeveloper;
-    }
-
-    @Override
-    public List<String>  delete(DeveloperDao entity) {
-//        try (Connection connection = manager.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(DELETE)) {
-//            statement.setString(1, entity.getLastName());
-//            statement.setString(2, entity.getFirstName());
-//            statement.executeUpdate();
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return null;
     }
 
     public Set<DeveloperDao> getDevelopersWithCertainLanguage(String language) {
@@ -180,6 +145,55 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
             exception.printStackTrace();
         }
         return quantity;
+    }
+
+    @Override
+    public DeveloperDao save(DeveloperDao entity) {
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return entity;
+    }
+
+    @Override
+    public DeveloperDao update(DeveloperDao entity) {
+        DeveloperDao updatedDeveloper=null;
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            updatedDeveloper = session.merge(entity);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return updatedDeveloper;
+    }
+
+
+    @Override
+    public List<String>  delete(DeveloperDao entity) {
+        List<String> result = new ArrayList<>();
+        try (Session session = connectionProvider.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            String companyName = entity.getCompany().getCompanyName();
+            CompanyDao companyDao = companyStorage.findByName(companyName).get();
+            Set<DeveloperDao> companyDevelopers = companyDao.getDevelopers();
+            companyDevelopers.remove(entity);
+            session.merge(companyDao);
+            session.clear();
+            session.remove(entity);
+            entity.getProjects().forEach(project -> project.getDevelopers().remove(entity));
+            entity.getSkills().forEach(skill -> skill.getDevelopers().remove(entity));
+            transaction.commit();
+            result.add(String.format("Developer '%s %s' successfully deleted from the database with all nesessary relations.",
+                    entity.getLastName(), entity.getFirstName()));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return result;
     }
 
 }

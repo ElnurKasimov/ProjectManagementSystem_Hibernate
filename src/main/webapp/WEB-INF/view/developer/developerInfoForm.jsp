@@ -11,9 +11,9 @@
     <body>
        <c:import url="${contextPath}/WEB-INF/view/navigation.jsp"/>
         <form action="/developer/developer_info">
-            <label for="lastName"> Last name: </label><br>
-            <input type="text" id="lastName" name="lastName"><br>
-            <label for="firstName"> First name: </label><br>
+            <label for="lastName"> Last name: </label>
+            <input type="text" id="lastName" name="lastName">
+            <label for="firstName"> First name: </label>
             <input type="text" id="firstName" name="firstName"><br>
             <button type="submit">Find</button>
         </form>
