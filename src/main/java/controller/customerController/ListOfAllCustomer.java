@@ -1,6 +1,6 @@
 package controller.customerController;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.dto.CustomerDto;
 import model.service.*;
 import model.storage.*;
@@ -36,6 +36,6 @@ public class ListOfAllCustomer extends HttpServlet {
         List<CustomerDto> customers = customerService.findAllCustomers();
         req.setAttribute("customers", customers);
         req.getRequestDispatcher("/WEB-INF/view/customer/listAllCustomers.jsp").forward(req, resp);
-
     }
+
 }

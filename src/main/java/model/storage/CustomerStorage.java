@@ -1,6 +1,6 @@
 package model.storage;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.dao.CustomerDao;
 import model.dao.ProjectDao;
 import org.hibernate.Session;
@@ -13,31 +13,8 @@ import java.util.stream.Collectors;
 public class CustomerStorage implements Storage<CustomerDao> {
     private static HibernateProvider connectionProvider;
 
-    private final String GET_ALL_INFO = "SELECT * FROM customer";
-    private final String FIND_BY_NAME = "SELECT * FROM customer WHERE  customer_name  LIKE  ?";
-    private final String FIND_BY_ID = "SELECT * FROM customer WHERE customer_id = ?";
-    private final String INSERT = "INSERT INTO customer(customer_name, reputation) VALUES (?, ?)";
-    private final String UPDATE =
-            "UPDATE customer SET reputation=? WHERE customer_name LIKE ? RETURNING *";
-    private  final String DELETE = "DELETE FROM customer WHERE customer_name LIKE  ?";
-
     public CustomerStorage(HibernateProvider connectionProvider) throws SQLException {
         this.connectionProvider = connectionProvider;
-    }
-
-    @Override
-    public Optional<CustomerDao> findById(long id) {
-//        try(Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(FIND_BY_ID)) {
-//            statement.setLong(1, id);
-//            ResultSet resultSet = statement.executeQuery();
-//            CustomerDao customerDao = mapCustomerDao(resultSet);
-//            return Optional.ofNullable(customerDao);
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return Optional.empty();
     }
 
     @Override

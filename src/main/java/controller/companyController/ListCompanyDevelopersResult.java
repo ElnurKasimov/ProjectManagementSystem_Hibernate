@@ -1,9 +1,8 @@
 package controller.companyController;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.dto.CompanyDto;
 import model.dto.DeveloperDto;
-import model.dto.ProjectDto;
 import model.service.CompanyService;
 import model.storage.CompanyStorage;
 

@@ -1,7 +1,7 @@
 package model.storage;
 
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.dao.CompanyDao;
 import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
@@ -15,31 +15,8 @@ import java.util.stream.Collectors;
 public class CompanyStorage implements Storage<CompanyDao> {
     private static HibernateProvider connectionProvider;
 
-    private final String GET_ALL_INFO = "SELECT * FROM company";
-    private final String FIND_BY_NAME = "SELECT * FROM company WHERE company_name  LIKE  ?";
-    private final String FIND_BY_ID = "SELECT * FROM company WHERE company_id = ?";
-    private final String INSERT = "INSERT INTO company(company_name, rating) VALUES (?, ?)";
-    private final String UPDATE =
-            "UPDATE company SET rating=? WHERE company_name LIKE ? RETURNING *";
-    private  final String DELETE = "DELETE FROM company WHERE company_name LIKE  ?";
-
     public CompanyStorage (HibernateProvider connectionProvider) throws SQLException {
         this.connectionProvider = connectionProvider;
-    }
-
-    @Override
-    public Optional<CompanyDao> findById(long id) {
-//        try(Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(FIND_BY_ID)) {
-//            statement.setLong(1, id);
-//            ResultSet resultSet = statement.executeQuery();
-//            CompanyDao companyDao = mapCompanyDao(resultSet);
-//            return Optional.ofNullable(companyDao);
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return Optional.empty();
     }
 
     @Override

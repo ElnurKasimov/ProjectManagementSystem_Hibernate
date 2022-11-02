@@ -1,6 +1,6 @@
 package controller.customerController;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.service.CustomerService;
 import model.storage.CustomerStorage;
 
@@ -36,6 +36,6 @@ public class deleteCustomer extends HttpServlet {
         List<String> result = customerService.deleteCustomer(customerName);
         req.setAttribute("result", result);
         req.getRequestDispatcher("/WEB-INF/view/customer/deleteCustomer.jsp").forward(req, resp);
-
     }
+
 }

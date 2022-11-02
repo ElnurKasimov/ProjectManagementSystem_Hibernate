@@ -6,7 +6,6 @@ import java.util.Set;
 
 public interface Storage <T> {
     T save (T entity);
-    Optional<T> findById (long id);
     Optional<T>  findByName (String name);
     Set<T> findAll();
     T update (T entity);

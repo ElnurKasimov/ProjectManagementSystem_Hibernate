@@ -1,6 +1,6 @@
 package controller.projectController;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.service.*;
 import model.storage.*;
 
@@ -25,19 +25,16 @@ public class AddProject extends HttpServlet {
     private static CustomerService customerService;
     private static ProjectStorage projectStorage;
     private static ProjectService projectService;
-    private static SkillStorage skillStorage;
-
 
     @Override
     public void init() throws ServletException {
         connectionProvider = new HibernateProvider();
         try {
-            skillStorage = new SkillStorage(connectionProvider);
             companyStorage = new CompanyStorage(connectionProvider);
             companyService = new CompanyService(companyStorage);
             customerStorage = new CustomerStorage(connectionProvider);
             customerService = new CustomerService(customerStorage);
-            developerStorage = new DeveloperStorage(connectionProvider, companyStorage, skillStorage);
+            developerStorage = new DeveloperStorage(connectionProvider, companyStorage);
             projectStorage = new ProjectStorage(connectionProvider, companyStorage, customerStorage);
             projectService = new ProjectService(projectStorage, developerStorage, companyService, customerService);
         } catch (SQLException e) {

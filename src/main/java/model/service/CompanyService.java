@@ -1,7 +1,6 @@
 package model.service;
 
 import model.dao.CompanyDao;
-import model.dao.ProjectDao;
 import model.dto.CompanyDto;
 import model.dto.DeveloperDto;
 import model.dto.ProjectDto;
@@ -24,11 +23,6 @@ public  CompanyService (CompanyStorage companyStorage) {
         return companyStorage.findAll().stream()
                 .map(CompanyConverter::from)
                 .collect(Collectors.toSet());
-    }
-
-    public Optional<CompanyDto> findById(long id) {
-    Optional<CompanyDao> companyDaoFromDb = companyStorage.findById(id);
-    return companyDaoFromDb.map(CompanyConverter::from);
     }
 
     public Optional<CompanyDto> findByName(String name) {

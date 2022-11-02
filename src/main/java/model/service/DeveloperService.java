@@ -19,21 +19,12 @@ import java.util.stream.Stream;
 
 public class DeveloperService {
     private DeveloperStorage developerStorage;
-    private ProjectService projectService;
-    private ProjectStorage projectStorage;
-    private SkillStorage skillStorage;
     private CompanyStorage companyStorage;
-    private RelationService relationService;
     private SkillService skillService;
 
-    public DeveloperService(DeveloperStorage developerStorage, ProjectService projectService, ProjectStorage projectStorage,
-                            SkillStorage skillstorage, CompanyStorage companyStorage, RelationService relationService, SkillService skillService) {
+    public DeveloperService(DeveloperStorage developerStorage, CompanyStorage companyStorage, SkillService skillService) {
         this.developerStorage = developerStorage;
-        this.projectService = projectService;
-        this.projectStorage = projectStorage;
-        this.skillStorage = skillstorage;
         this.companyStorage = companyStorage;
-        this.relationService = relationService;
         this.skillService = skillService;
     }
 
@@ -45,10 +36,6 @@ public class DeveloperService {
 
     public DeveloperDto getByName(String lastName, String firstName) {
         return developerStorage.findByName(lastName, firstName).map(DeveloperConverter::from).orElse(null);
-    }
-
-    public long getIdByName(String lastName, String firstName) {
-        return developerStorage.getIdByName(lastName, firstName);
     }
 
     public List<String> getListNamesDevelopersWithCertainLanguage(String language) {
@@ -125,20 +112,7 @@ public class DeveloperService {
         Set<SkillDto> skills = new HashSet<>();
         skills.add(skillDto);
         developerToUpdate.setSkills(skills.stream().map(SkillConverter::to).collect(Collectors.toSet()));
-
         DeveloperDao updatedDeveloper = developerStorage.update(developerToUpdate);
-
-
-//        Set<ProjectDto> projects = Stream.of(projectsNames)
-//                .map(name -> projectService.findByName(name).get())
-//                .collect(Collectors.toSet());
-//
-//        relationService.deleteAllProjectsOfDeveloper(updatedDeveloperDto);
-//        relationService.saveProjectDeveloper(projects, updatedDeveloperDto);
-//
-//        relationService.deleteAllSkillsOfDeveloper(updatedDeveloperDto);
-//        relationService.saveDeveloperSkill(updatedDeveloperDto, skillsDto);
-
         return String.format("Developer %s %s successfully updated with all necessary relations.",
                 lastName, firstName);
     }
@@ -147,10 +121,6 @@ public class DeveloperService {
         List<String> result = new ArrayList<>();
         Optional<DeveloperDao> developerDaoFromDb = developerStorage.findByName(lastName, firstName);
         if (developerDaoFromDb.isPresent()) {
-
-//            relationService.deleteDeveloperFromDeveloperSkill(developerDtoToDelete);
-//            relationService.deleteDeveloperFromProjectDeveloper(developerDtoToDelete);
-//            relationService.deleteDeveloperFromCompany(developerDtoToDelete);
             result = developerStorage.delete(developerDaoFromDb.get());
         } else {
             result.add("There is no such developer in the database. Please enter correct data");

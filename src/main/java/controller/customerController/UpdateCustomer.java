@@ -1,6 +1,6 @@
 package controller.customerController;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.dto.CustomerDto;
 import model.service.CustomerService;
 import model.storage.CustomerStorage;
@@ -38,6 +38,6 @@ public class UpdateCustomer extends HttpServlet {
         String result = customerService.updateCustomer(customerDtoToUpdate);
         req.setAttribute("result", result);
         req.getRequestDispatcher("/WEB-INF/view/customer/updateCustomer.jsp").forward(req, resp);
-
     }
+
 }

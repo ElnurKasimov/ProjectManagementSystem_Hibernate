@@ -1,25 +1,19 @@
 package model.service;
 
-import model.dao.CompanyDao;
-import model.dao.CustomerDao;
 import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
 import model.dto.CompanyDto;
 import model.dto.CustomerDto;
 import model.dto.ProjectDto;
 import model.service.converter.ProjectConverter;
-import model.storage.CompanyStorage;
-import model.storage.CustomerStorage;
 import model.storage.DeveloperStorage;
 import model.storage.ProjectStorage;
-
 
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ProjectService {
     private ProjectStorage projectStorage;
@@ -49,12 +43,6 @@ public class ProjectService {
         } else return Optional.empty();
     }
 
-    public Optional<ProjectDto> findById(Long id) {
-        if (projectStorage.findById(id).isPresent()) {
-            return Optional.of(ProjectConverter.from(projectStorage.findById(id).get()));
-        } else return Optional.empty();
-    }
-
     public List<String> getProjectsNameByDeveloperId(long id) {
         Set<ProjectDao> projectsFromDb = projectStorage.getProjectsNameByDeveloperId(id);
         if (projectsFromDb.isEmpty()) {
@@ -64,70 +52,15 @@ public class ProjectService {
         }
     }
 
-    public List<Long> getProjectIdsByDeveloperId(long id) {
-        return projectStorage.getProjectIdsByDeveloperId(id);
+    public ProjectDto getInfoByName(String name) {
+        return ProjectConverter.from(projectStorage.findByName(name).get());
     }
 
-//    public List<ProjectDto> getCompanyProjects(String companyName) {
-//        List<ProjectDto> projects = new ArrayList<>();
-//        List<ProjectDao> projectDaoList = projectStorage.getCompanyProjects(companyName);
-//        for (ProjectDao projectDao : projectDaoList) {
-//            projects.add(ProjectConverter.from(projectDao));
-//        }
-//        return projects;
-//    }
-//
-//    public List<ProjectDto> getCustomerProjects(String customerName) {
-//        List<ProjectDto> projects = new ArrayList<>();
-//        List<ProjectDao> projectDaoList = projectStorage.getCustomerProjects(customerName);
-//        for (ProjectDao projectDao : projectDaoList) {
-//            projects.add(ProjectConverter.from(projectDao));
-//        }
-//        return projects;
-//    }
-
-    public long getIdByName(String name) {
-        return projectStorage.getIdByName(name).orElseGet(() -> {
-            System.out.print("There is no project with such name. Please enter correct data");
-            return (long) 0;
-        });
+    public long getProjectExpences(String projectName) {
+        return projectStorage.getProjectExpences(projectName);
     }
 
-    public Set<ProjectDto> checkByCompanyName(String companyName) {
-//        System.out.printf("\tCompany %s develops such projects : \n", companyName);
-//        List<ProjectDto> projectDtoList = getCompanyProjects(companyName);
-//        for (ProjectDto projectDto : projectDtoList) {
-//            System.out.print(projectDto.getProject_name() + ",\n");
-//        }
-//        if (projectDtoList.isEmpty()) {
-//            System.out.println("\nThere is no project in the company. Please create the one.");
-//            ProjectDto newProjectDto;
-//            do {
-//                newProjectDto = createProject();
-//                newProjectDto = save(newProjectDto);
-//            } while (newProjectDto.getProject_id() == 0);
-//            System.out.println("Company " + companyName + " develops project " + newProjectDto.getProject_name());
-//        }
-        Set<ProjectDto> projectsDto = new HashSet<>();
-//        while (true) {
-//            System.out.print("\tPlease enter project name the developers participate in : ");
-//            Scanner sc = new Scanner(System.in);
-//            String projectName = sc.nextLine();
-//            Optional<ProjectDao> projectDaoFromDb = projectStorage.findByName(projectName);
-//            if (projectDaoFromDb.isPresent()) {
-//                ProjectDto selectedProject = ProjectConverter.from(projectDaoFromDb.get());
-//                projectsDto.add(selectedProject);
-//                System.out.print("One more project? (yes/no) : ");
-//                String anotherLanguage = sc.nextLine();
-//                if (anotherLanguage.equalsIgnoreCase("no")) break;
-//            } else {
-//                System.out.println("\tThere is no such project. Please enter correct data");
-//            }
-//        }
-        return projectsDto;
-    }
-
-    public String saveProject(String projectName, String customerName, int cost, String companyName, Date startSqlDate) {
+     public String saveProject(String projectName, String customerName, int cost, String companyName, Date startSqlDate) {
         CompanyDto companyDto = null;
         CustomerDto customerDto = null;
         ProjectDto savedProjectDto = null;
@@ -159,7 +92,6 @@ public class ProjectService {
         return result;
     }
 
-
     public boolean validateByName(ProjectDto projectDto, ProjectDto projectFromDb) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateFromProjectDto = dateFormat.format(projectDto.getStartDate());
@@ -168,14 +100,6 @@ public class ProjectService {
                 (projectDto.getCustomer().getCustomerName().equals(projectFromDb.getCustomer().getCustomerName())) &&
                 (projectDto.getCost() == projectFromDb.getCost()) &&
                 (dateFromProjectDto.equals(dateFromProjectFromDb));
-    }
-
-    public ProjectDto getInfoByName(String name) {
-        return ProjectConverter.from(projectStorage.findByName(name).get());
-    }
-
-    public long getProjectExpences(String projectName) {
-        return projectStorage.getProjectExpences(projectName);
     }
 
     public List<String> getProjectsListInSpecialFormat() {
@@ -248,13 +172,6 @@ public class ProjectService {
             result.add("There is no project with such name. Please enter correct one.");
         }
         return result;
-    }
-
-    public boolean checkProjects(String[] projectsNames, String companyName) {
-        //List<String> companyProjectsNames = getCompanyProjects(companyName).stream()
-        //        .map(ProjectDto::getProjectName).collect(Collectors.toList());
-        //return Stream.of(projectsNames).allMatch(companyProjectsNames::contains);
-        return true;
     }
 
 }

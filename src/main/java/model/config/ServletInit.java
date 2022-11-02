@@ -1,4 +1,4 @@
-package controller.customerController.config;
+package model.config;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

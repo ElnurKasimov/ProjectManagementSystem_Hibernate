@@ -1,9 +1,7 @@
 package controller.developerController;
 
-import controller.customerController.config.HibernateProvider;
-import model.dto.DeveloperDto;
+import model.config.HibernateProvider;
 import model.dto.ProjectDto;
-import model.dto.SkillDto;
 import model.service.*;
 import model.storage.*;
 
@@ -32,8 +30,6 @@ public class UpdateDeveloperResult extends HttpServlet {
     private static ProjectService projectService;
     private static SkillService skillService;
     private static SkillStorage skillStorage;
-    private static RelationStorage relationStorage;
-    private static RelationService relationService;
 
     @Override
     public void init() throws ServletException {
@@ -41,17 +37,14 @@ public class UpdateDeveloperResult extends HttpServlet {
         try {
             skillStorage = new SkillStorage(connectionProvider);
             skillService = new SkillService(skillStorage);
-            relationStorage = new RelationStorage(connectionProvider);
-            relationService = new RelationService(relationStorage);
             companyStorage = new CompanyStorage(connectionProvider);
             companyService = new CompanyService(companyStorage);
             customerStorage = new CustomerStorage(connectionProvider);
             customerService = new CustomerService(customerStorage);
-            developerStorage = new DeveloperStorage(connectionProvider, companyStorage, skillStorage);
+            developerStorage = new DeveloperStorage(connectionProvider, companyStorage);
             projectStorage = new ProjectStorage(connectionProvider, companyStorage, customerStorage);
             projectService = new ProjectService(projectStorage, developerStorage, companyService, customerService);
-            developerService = new DeveloperService(developerStorage, projectService, projectStorage,
-                    skillStorage, companyStorage, relationService, skillService);
+            developerService = new DeveloperService(developerStorage, companyStorage, skillService);
         } catch (SQLException e) {
             e.printStackTrace();
         }

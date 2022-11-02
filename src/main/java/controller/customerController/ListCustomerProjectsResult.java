@@ -1,12 +1,9 @@
 package controller.customerController;
 
-import controller.customerController.config.HibernateProvider;
-import model.dto.CompanyDto;
+import model.config.HibernateProvider;
 import model.dto.CustomerDto;
 import model.dto.ProjectDto;
-import model.service.CompanyService;
 import model.service.CustomerService;
-import model.storage.CompanyStorage;
 import model.storage.CustomerStorage;
 
 import javax.servlet.ServletException;
@@ -47,8 +44,5 @@ public class ListCustomerProjectsResult extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/view/customer/listCustomerProjects.jsp").forward(req, resp);
 
     }
-
-
-
 
 }

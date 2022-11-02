@@ -1,6 +1,6 @@
 package controller.companyController;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.dto.CompanyDto;
 import model.service.CompanyService;
 import model.storage.CompanyStorage;
@@ -40,8 +40,5 @@ public class UpdateCompanyResult extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/view/company/updateCompany.jsp").forward(req, resp);
 
     }
-
-
-
 
 }

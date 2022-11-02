@@ -1,6 +1,6 @@
 package controller.customerController;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.dto.CustomerDto;
 import model.service.*;
 import model.storage.*;
@@ -38,6 +38,6 @@ public class AddCustomer extends HttpServlet {
         String result = customerService.save(newCustomerDto);
         req.setAttribute("result", result);
         req.getRequestDispatcher("/WEB-INF/view/customer/addCustomer.jsp").forward(req, resp);
-
     }
+
 }

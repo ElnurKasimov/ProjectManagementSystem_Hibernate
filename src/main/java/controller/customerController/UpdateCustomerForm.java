@@ -1,6 +1,6 @@
 package controller.customerController;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

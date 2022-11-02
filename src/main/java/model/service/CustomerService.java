@@ -30,6 +30,12 @@ public  CustomerService (CustomerStorage customerStorage) {
                 .collect(Collectors.toList());
     }
 
+    public Set<ProjectDto> getCustomerProjects(String name) {
+        Optional<CustomerDao>  customerDaoFromDb = customerStorage.findByName(name);
+        return customerDaoFromDb.map(customerDao -> customerDao.getProjects().stream().map(ProjectConverter::from).collect(Collectors.toSet()))
+                .orElseGet(HashSet::new);
+    }
+
     public String save (CustomerDto customerDto) {
         String result = "";
         Optional<CustomerDao> customerFromDb = customerStorage.findByName(customerDto.getCustomerName());
@@ -70,12 +76,6 @@ public  CustomerService (CustomerStorage customerStorage) {
             result =  customerStorage.delete(customerDaoFromDb.get());
         } else { result.add("There is no customer with such name in the database. Please enter correct data.");}
         return result;
-    }
-
-    public Set<ProjectDto> getCustomerProjects(String name) {
-        Optional<CustomerDao>  customerDaoFromDb = customerStorage.findByName(name);
-        return customerDaoFromDb.map(customerDao -> customerDao.getProjects().stream().map(ProjectConverter::from).collect(Collectors.toSet()))
-                .orElseGet(HashSet::new);
     }
 
  }

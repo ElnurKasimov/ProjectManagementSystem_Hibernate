@@ -1,6 +1,6 @@
 package controller.developerController;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.service.*;
 import model.storage.*;
 
@@ -19,15 +19,8 @@ public class ListDevelopersWithCertainLevel extends HttpServlet {
     private static DeveloperStorage developerStorage;
     private static DeveloperService developerService;
     private static CompanyStorage companyStorage;
-    private static CompanyService companyService;
-    private static CustomerStorage customerStorage;
-    private static CustomerService customerService;
-    private static ProjectStorage projectStorage;
-    private static ProjectService projectService;
     private static SkillService skillService;
     private static SkillStorage skillStorage;
-    private static RelationStorage relationStorage;
-    private static RelationService relationService;
 
     @Override
     public void init() throws ServletException {
@@ -35,17 +28,9 @@ public class ListDevelopersWithCertainLevel extends HttpServlet {
         try {
             skillStorage = new SkillStorage(connectionProvider);
             skillService = new SkillService(skillStorage);
-            relationStorage = new RelationStorage(connectionProvider);
-            relationService = new RelationService(relationStorage);
             companyStorage = new CompanyStorage(connectionProvider);
-            companyService = new CompanyService(companyStorage);
-            customerStorage = new CustomerStorage(connectionProvider);
-            customerService = new CustomerService(customerStorage);
-            developerStorage = new DeveloperStorage(connectionProvider, companyStorage, skillStorage);
-            projectStorage = new ProjectStorage(connectionProvider, companyStorage, customerStorage);
-            projectService = new ProjectService(projectStorage, developerStorage, companyService, customerService);
-            developerService = new DeveloperService(developerStorage, projectService, projectStorage,
-                    skillStorage, companyStorage, relationService, skillService);
+            developerStorage = new DeveloperStorage(connectionProvider, companyStorage);
+            developerService = new DeveloperService(developerStorage, companyStorage, skillService);
         } catch (SQLException e) {
             e.printStackTrace();
         }

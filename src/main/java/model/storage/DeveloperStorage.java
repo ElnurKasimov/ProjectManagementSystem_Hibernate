@@ -1,8 +1,7 @@
 package model.storage;
 
-import controller.customerController.config.HibernateProvider;
+import model.config.HibernateProvider;
 import model.dao.CompanyDao;
-import model.dao.CustomerDao;
 import model.dao.DeveloperDao;
 import model.dao.ProjectDao;
 import org.hibernate.Session;
@@ -15,45 +14,11 @@ import java.util.stream.Collectors;
 public class DeveloperStorage implements Storage<DeveloperDao>{
     private static HibernateProvider connectionProvider;
     private CompanyStorage companyStorage;
-    private final String GET_ALL_INFO = "SELECT * FROM developer";
-    private final String FIND_BY_NAME = "SELECT * FROM developer WHERE lastName LIKE ? and firstName LIKE ? ";
-    private final String INSERT = "INSERT INTO developer(lastName, firstName, age, company_id, salary) VALUES (?, ?, ?, ?, ?)";
 
-    private final String GET_LIST_LANGUAGE_DEVELOPERS =
-            "SELECT lastName, firstName, level FROM developer JOIN developer_skill " +
-             "ON developer.developer_id = developer_skill.developer_id " +
-             "JOIN skill ON developer_skill.skill_id = skill.skill_id WHERE language LIKE ?";
-
-    private final String GET_LIST_LEVEL_DEVELOPERS =
-            "SELECT lastName, firstName, language FROM developer JOIN developer_skill " +
-                    "ON developer.developer_id = developer_skill.developer_id " +
-                    "JOIN skill ON developer_skill.skill_id = skill.skill_id WHERE level LIKE ?";
-    private final String GET_PROJECT_DEVELOPERS =
-            "SELECT lastname, firstname FROM project " +
-            "JOIN project_developer ON project_developer.project_id = project.project_id " +
-            "JOIN developer ON developer.developer_id = project_developer.developer_id " +
-            "WHERE project_name LIKE ?";
-    private final String GET_QUANTITY_PROJECT_DEVELOPERS =
-            "SELECT COUNT(developer_id) FROM project JOIN project_developer " +
-                    "ON project.project_id = project_developer.project_id " +
-                    " WHERE project_name  LIKE  ?";
-    private final String UPDATE =
-            "UPDATE developer SET age=?, salary=?, company_id=? WHERE lastName LIKE ? AND firstName LIKE ? RETURNING *";
-    private final String GET_ID_BY_NAME =
-            "SELECT developer_id FROM developer WHERE  lastName LIKE ? AND firstName LIKE ?";
-    private  final String DELETE = "DELETE FROM developer WHERE lastName LIKE ? AND firstName LIKE ?";
-
-    public DeveloperStorage (HibernateProvider connectionProvider, CompanyStorage companyStorage,
-                             SkillStorage skillStorage) {
+    public DeveloperStorage (HibernateProvider connectionProvider, CompanyStorage companyStorage) {
         this.connectionProvider = connectionProvider;
         this.companyStorage = companyStorage;
 
-    }
-
-
-
-    @Override
-    public Optional<DeveloperDao> findById(long id) {return null;
     }
 
    @Override
@@ -71,19 +36,6 @@ public class DeveloperStorage implements Storage<DeveloperDao>{
         return Optional.empty();
     }
 
-    public long getIdByName(String lastName, String firstName) {
-//        try(Connection connection = manager.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)) {
-//            statement.setString(1, lastName);
-//            statement.setString(2, firstName);
-//            ResultSet resultSet = statement.executeQuery();
-//            return resultSet.getLong("developer_id");
-//        }
-//        catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return 0;
-    }
     @Override
     public Set<DeveloperDao> findAll() {
         try (Session session = connectionProvider.openSession()) {
