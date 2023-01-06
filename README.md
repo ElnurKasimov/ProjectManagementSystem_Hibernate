@@ -1,7 +1,7 @@
 # hibernate_postgresql
 a simple web application for a project management system using Hibernate and PostgreSQL DB
 -	web application for simple CRM for IT market using a servlet container Tomcat 9.0.64
-- Framework used - JSTL, GSON, LOMBOK
+- Libraries used - JSTL, GSON, LOMBOK
 -	Patterns used - MVC, DAO/DTO, Singleton
 
 For proper work of code from this repository please make such steps:
